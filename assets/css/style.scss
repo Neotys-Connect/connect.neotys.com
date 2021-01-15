@@ -1,0 +1,57 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import
+  "minima/skins/{{ site.minima.skin | default: 'classic' }}",
+  "minima/initialize";
+
+body {
+  font-family: 'Montserrat', 'Arial'
+}
+a:link,a:active,a:visited,a:hover {
+  color:#000;
+}
+a:hover {
+  color:#00f;
+  text-decoration:none;
+}
+
+.wrapper {
+  max-width: calc(1024px - (30px * 2));
+}
+
+div.home-table {
+  margin-top: 2em;
+  overflow: auto;
+}
+div.home-column {
+  float: left;
+  width: 25%;
+  //background: #eee;
+  text-align: center;
+}
+div.home-icon {
+  margin: 0 auto;
+  width: 150px;
+  height: 107px;
+  background-image: url(/assets/home-icons.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+div.home-column-title {
+  margin-top:0.3em;
+  font-size:1.5em
+}
+div.home-icon-tutorials {
+  background-position: 0% 0%
+}
+div.home-icon-assets {
+  background-position: 35% 0%
+}
+div.home-icon-contribute {
+  background-position: 70% 0%
+}
+div.home-icon-involved {
+  background-position: 105% 0%
+}
