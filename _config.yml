@@ -18,6 +18,8 @@ header_pages:
   - _pages/tutorials.markdown
   - _pages/getinvolved.markdown
 
+google_analytics: G-WZ89N6ZSFK
+
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
