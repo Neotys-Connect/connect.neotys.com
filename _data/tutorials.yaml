@@ -4,7 +4,7 @@ items:
 - title: Deploying NeoLoad Web in AWS
   category: Deployment
   priority: 1
-  url: /tutorials/deploying-neoload-web-in-aws/
+  url: /tutorials/deploying-neoload-web-in-aws
 
 - title: Mobile app load testing
   category: Testing
