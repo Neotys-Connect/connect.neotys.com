@@ -27,9 +27,18 @@ div.home-table {
 }
 div.home-column {
   float: left;
-  width: 25%;
-  //background: #eee;
+  width: 23%;
+  padding-left:1%;
+  padding-right:1%;
+  border-right: solid 1px #eee;
   text-align: center;
+}
+div.last {
+  padding-right:0%;
+  border-right: none;
+}
+div.home-column-inner {
+  min-height: 300px;
 }
 div.home-icon {
   margin: 0 auto;
@@ -41,7 +50,16 @@ div.home-icon {
 }
 div.home-column-title {
   margin-top:0.3em;
-  font-size:1.5em
+  font-size:1.5em;
+  height:3em;
+  position: relative;
+  display: inline-block;
+  line-height: 3em;
+}
+div.home-column-title > span {
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1.2em;
 }
 div.home-icon-tutorials {
   background-position: 0% 0%
@@ -54,4 +72,29 @@ div.home-icon-contribute {
 }
 div.home-icon-involved {
   background-position: 105% 0%
+}
+
+div.home-column-list {
+  margin-top:1em;
+  font-size:0.8em;
+  text-align:left;
+}
+div.home-column-list > ul {
+  margin-left:0.9em;
+}
+div.home-column-more {
+  font-size:0.8em;
+}
+
+div.article-content-with-sidebar {
+  float: left;
+  width:79%;
+}
+div.article-sidebar {
+  float: left;
+  width:20%;
+}
+
+.post-header {
+  color:#aaa;
 }

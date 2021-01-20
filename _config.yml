@@ -1,9 +1,9 @@
 title: Neotys Connect
 description: >-
-  A portal for tutorials, learning resources, and collaboration announcements
-  related to the NeoLoad Platform.
+  Community-driven tutorials, learning resources, and collaborations on the NeoLoad Platform.
 twitter_username: neotys
 github_username:  Neotys-Connect
+url: https://connect.neotys.com
 
 # Build settings
 theme: minima

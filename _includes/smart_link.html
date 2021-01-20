@@ -1,0 +1,10 @@
+{% assign url_start = site.url %}
+{% unless jekyll.environment == "production" %}
+  {% assign url_start = "http://localhost" %}
+{% endunless %}
+
+{% assign target_attrib = "" %}
+{% if include.url contains "://" %}
+  {% assign target_attrib = ' target="_blank"' %}
+{% endif %}
+<a href="{{ include.url }}" title="{{ include.text }}"{{ target_attrib }}>{{ include.text }}</a>

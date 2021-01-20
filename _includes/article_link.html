@@ -1,0 +1,3 @@
+{%- capture url %}{{ include.article.url }}{% endcapture -%}
+{%- capture text %}{{ include.article.title }}{% endcapture -%}
+{%- include smart_link.html url=url text=text -%}

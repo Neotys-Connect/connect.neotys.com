@@ -1,0 +1,99 @@
+---
+layout: default
+---
+<article class="post">
+
+{% assign sidebar=false %}
+{% if page.videos %}{% assign sidebar=true %}{% endif %}
+{% if page.contributors %}{% assign sidebar=true %}{% endif %}
+{% if page.documentation %}{% assign sidebar=true %}{% endif %}
+{% if page.toc %}{% assign sidebar=true %}{% endif %}
+
+{% if sidebar %}
+  <div class="article-content-with-sidebar">
+{% endif %}
+
+
+<header class="post-header">
+  <h1 class="post-title">{{ page.title | escape }}</h1>
+</header>
+
+{{ content }}
+
+
+
+
+{% if sidebar %}
+  </div>
+  <div class="article-sidebar">
+{% endif %}
+
+{% if page.contributors %}
+  <h3>Contributors</h3>
+  <ul>
+  {% for contributor in page.contributors %}
+    {%- capture url %}{{ contributor.url }}{% endcapture -%}
+    {%- capture text %}{{ contributor.text }}{% endcapture -%}
+    <li>{%- include smart_link.html url=url text=text -%}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+<p style="font-size:0.8em">
+{% if page.support %}
+  {% if page.support == "Neotys" %}
+  Officially supported by Neotys
+  {% else %}
+  Supported by {{ page.support }}
+  <br />(not Neotys officially)
+  {% endif %}
+{% else %}
+Not officially supported by Neotys
+{% endif %}
+</p>
+
+{% if page.documentation %}
+  <p>
+  <h3>Product Docs</h3>
+  {% for link in page.documentation %}
+  <a href="{{ link }}" target="_blank">Visit documentation</a>
+  {% endfor %}
+  </p>
+{% endif %}
+
+{% if page.academy %}
+  <p>
+  <h3>Neotys Academy</h3>
+  {% for link in page.academy %}
+  <a href="{{ link }}" target="_blank">Visit course</a>
+  {% endfor %}
+  </p>
+{% endif %}
+
+{% if page.videos %}
+  <p>
+  <h3>Videos</h3>
+  {% for video in page.videos %}
+    {% if video.image and video.url %}
+    <a href="{{ video.url}}" target="_blank"><img src="{{ video.image }}" alt="VIDEO"></a>
+    {% else %}
+      <iframe width="280" height="157" src="{{ video }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    {% endif %}
+  {% endfor %}
+  </p>
+{% endif %}
+
+{% if page.toc %}
+  <div class="toc">
+  <p>
+  <h3>ToC</h3>
+  {{ page.toc | markdownify }}
+  </p>
+  </div>
+{% endif %}
+
+{% if sidebar %}
+  </div>
+{% endif %}
+
+</article>

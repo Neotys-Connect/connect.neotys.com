@@ -1,0 +1,12 @@
+list_title: Integrations
+items:
+
+- title: Dynatrace
+  category: APM
+  priority: 1
+  url: /tutorials/dynatrace-and-neoload
+
+- title: Selenium
+  category: Functional
+  priority: 1
+  url: /tutorials/selenium-and-neoload

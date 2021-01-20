@@ -4,4 +4,4 @@ title: Create & Contribute
 permalink: /contribute/
 ---
 
-This is the contribution page
+Coming soon!
