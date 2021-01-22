@@ -83,6 +83,15 @@ Not officially supported by Neotys
   </p>
 {% endif %}
 
+{% if page.repo %}
+  <p>
+  <h3>Code Repos</h3>
+  {% for link in page.repo %}
+  <a href="{{ link }}" target="_blank">{{ link | split: "/" | last }}</a>
+  {% endfor %}
+  </p>
+{% endif %}
+
 {% if page.toc %}
   <div class="toc">
   <p>
