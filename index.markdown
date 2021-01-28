@@ -41,7 +41,7 @@ permalink: /
       </a>
       <div class="home-column-list">
         <div>
-          <div style="float:left;width:49%;">
+          <div class="home-column-list-two-lists">
           Integrations:
           <ul>
           {% for article in site.data.integrations.items limit:5 %}
@@ -51,7 +51,7 @@ permalink: /
           {% endfor %}
           </ul>
           </div>
-          <div style="float:left;width:49%;">
+          <div class="home-column-list-two-lists">
           Frameworks:
           <ul>
           {% for article in site.data.frameworks.items limit:5 %}

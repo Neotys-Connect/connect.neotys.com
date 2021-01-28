@@ -1,2 +1,267 @@
 // Placeholder to allow defining custom styles that override everything else.
 // (Use `_sass/minima/custom-variables.scss` to override variable defaults)
+
+$neotysDark: #2d394e;
+$minWidth: 800px;
+
+* {
+  font-family: 'Montserrat', Helvetica, Sans-Serif !important;
+}
+a:link,a:active,a:visited,a:hover {
+  color: $neotysDark;
+}
+a:hover {
+  color:#00f;
+  text-decoration:none;
+}
+
+.site-header {
+  background: #f1f1ef;
+  color: $neotysDark;
+  border-top: none;
+}
+.site-header >> a {
+  color: $neotysDark;
+}
+.site-title, .site-title:visited, .site-nav .page-link { color: $neotysDark; }
+
+span.site-description {
+  float:left;
+  color: scale-color($neotysDark, $lightness: 55%);
+  max-width:350px;
+  line-height:1em;
+  margin-right:2em;
+  padding-bottom:1em;
+  padding-top:0.5em;
+  font-size:0.9em;
+}
+
+.wrapper {
+  max-width: calc(1024px - (30px * 2));
+}
+
+div.home-table {
+  margin-top: 2em;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+div.home-column {
+  float: left;
+  width: 23%;
+  min-width: 220px;
+  padding-left:1%;
+  padding-right:1%;
+  padding-bottom:3em;
+  text-align: center;
+}
+/*@include media-query($on-palm) {*/
+@media screen and (max-width: $minWidth) {
+  div.home-column {
+    min-width: 43vw;
+    max-width: 175px;
+  }
+}
+div.home-column >> .home-column-list {
+  border-left: solid 1px #ccc;
+}
+div.home-column:first-child >> .home-column-list {
+  border-left: none;
+}
+div.home-column-list-two-lists {
+  float:left;
+  width:49%;
+}
+@media screen and (max-width: $minWidth) {
+  div.home-column-list-two-lists {
+    float:none;
+    width:100%;
+  }
+}
+div.last {
+  padding-right:0%;
+  border-right: none;
+}
+div.home-column-inner {
+  min-height: 350px;
+  padding-left:0.5em;
+  padding-right:0.5em;
+  display: flex;
+  flex-wrap: wrap;
+}
+div.home-icon {
+  margin: 0 auto;
+  width: 150px;
+  height: 107px;
+  background-image: url(/assets/home-icons.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+div.home-column-title {
+  margin-top:0.3em;
+  font-size:1.5em;
+  height:3em;
+  position: relative;
+  display: inline-block;
+  line-height: 3em;
+}
+div.home-column-title > span {
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1.2em;
+}
+div.home-column-more {
+  clear:both;
+}
+div.home-icon-tutorials {
+  background-position: 0% 0%
+}
+div.home-icon-assets {
+  background-position: 35% 0%
+}
+div.home-icon-contribute {
+  background-position: 70% 0%
+}
+div.home-icon-involved {
+  background-position: 105% 0%
+}
+
+div.home-column-list {
+  margin-top:1em;
+  font-size:0.8em;
+  text-align:left;
+}
+div.home-column-list > ul {
+  margin-left:0.9em;
+}
+div.home-column-more {
+  font-size:0.8em;
+}
+
+@media screen and (min-width: $minWidth) {
+  div.article-content-with-sidebar {
+    float: left;
+    width:65%;
+    padding-right:1em;
+  }
+  div.article-sidebar {
+    float: left;
+    width:30%;
+  }
+}
+@media screen and (max-width: $minWidth) {
+  div.article-container {
+    display: flex;
+    flex-direction: column-reverse;
+    width:100%;
+  }
+  div.article-content-with-sidebar {
+    float: left;
+    width:100%;
+  }
+  div.article-sidebar {
+    float: left;
+    width:100%;
+    clear:both;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  div.sidebar-section {
+    width:auto;
+    margin:0.5em;
+  }
+}
+
+.post-header {
+  color:#aaa;
+}
+
+div.sidebar-section {
+  border-left: solid 5px #eee;
+  padding-left:0.5em;
+}
+div.sidebar-section > h3 {
+  color:#aaa;
+}
+
+span.support-neotys {
+  color: green;
+}
+
+span.support-external {
+  color: orange;
+}
+
+span.support-none {
+  color: darkred;
+}
+
+$color: #254568;
+$main-width: 50rem;
+
+// How far of a scroll travel within <main> prior to the
+// link appearing
+$scrollLength: 100vh;
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.back-to-top-wrapper {
+  // uncomment to visualize "track"
+  // outline: 1px solid red;
+  position: absolute;
+  top: $scrollLength;
+  right: 0.25rem;
+  bottom: -5em;
+  width: 3em;
+  pointer-events: none;
+}
+
+.back-to-top-link {
+  // `fixed` is fallback
+  position: fixed;
+  // preferred positioning, requires prefixing for most support, and not supported on Safari
+  // @link https://caniuse.com/#search=position%3A%20sticky
+  position: sticky;
+  // reinstate clicks
+  pointer-events: all;
+  // achieves desired positioning within the viewport
+  // relative to the top of the viewport once `sticky` takes over, or always if `fixed` fallback is used
+  top: calc(100vh - 5rem);
+
+  // basic styling
+  display: inline-block;
+  text-decoration: none;
+  font-size: 2rem;
+  line-height: 3rem;
+  text-align: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  padding: 0.25rem;
+
+  // "pretty" styles, including states
+  border: 1px solid $color;
+  background-color: scale-color($color, $lightness: 85%);
+  transition: transform 80ms ease-in;
+
+  &:hover,
+  &:focus {
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px scale-color($color, $lightness: 35%);
+  }
+}
+
+// .toc {
+//   padding: 5px;;
+//   width: 130px;
+//   z-index: 100;
+//   position: fixed;
+// }

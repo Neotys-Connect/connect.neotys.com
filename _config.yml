@@ -15,8 +15,8 @@ include:
 
 header_pages:
   - _pages/about.markdown
-  - _pages/tutorials.markdown
-  - _pages/getinvolved.markdown
+  - title: Back to neotys.com
+    url: https://www.neotys.com
 
 google_analytics: G-WZ89N6ZSFK
 
