@@ -3,7 +3,7 @@ items:
 
 - title: Deploying NeoLoad Web in AWS
   category: Deployment
-  priority: 1
+  priority: 3
   url: /tutorials/deploying-neoload-web-in-aws
 
 - title: Mobile app load testing
@@ -22,7 +22,7 @@ items:
 
 - title: NL-NETWORK-01/03 errors
   category: Troubleshooting
-  priority: 1
+  priority: 2
   url: https://www.neotys.com/documents/doc/neoload/latest/2907.htm#o39346
 
 - title: Planning for heavy load testing
