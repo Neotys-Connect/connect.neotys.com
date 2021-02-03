@@ -4,9 +4,11 @@ title: Tutorials
 permalink: /tutorials/
 ---
 
-{% assign groups = site.data.tutorials.items | group_by:"category" %}
+<div class="boxed-outer">
+
+{% assign groups = site.data.tutorials.items | sort: "category" | group_by:"category" %}
 {% for group in groups %}
-  <div>
+  <div class="boxed-category">
     <h2>{{ group.name }}</h2>
     <ul>
     {% for article in group.items %}
@@ -17,3 +19,5 @@ permalink: /tutorials/
     </ul>
   </div>
 {% endfor %}
+
+</div>

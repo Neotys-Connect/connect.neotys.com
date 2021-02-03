@@ -17,8 +17,10 @@ permalink: /
       </div>
       </a>
       <div class="home-column-list">
+        Top searches:
         <ul>
-        {% for article in site.data.tutorials.items limit:5 %}
+        {% assign sorted_tutorials = site.data.tutorials.items | sort: "priority" | reverse %}
+        {% for article in sorted_tutorials limit:6 %}
           <li>
             {% include article_link.html article=article %}
           </li>
@@ -44,7 +46,8 @@ permalink: /
           <div class="home-column-list-two-lists">
           Integrations:
           <ul>
-          {% for article in site.data.integrations.items limit:5 %}
+          {% assign sorted_integrations = site.data.integrations.items | sort: "priority" | reverse %}
+          {% for article in sorted_integrations limit:5 %}
             <li>
               {% include article_link.html article=article %}
             </li>
@@ -54,7 +57,8 @@ permalink: /
           <div class="home-column-list-two-lists">
           Frameworks:
           <ul>
-          {% for article in site.data.frameworks.items limit:5 %}
+          {% assign sorted_frameworks = site.data.frameworks.items | sort: "priority" | reverse %}
+          {% for article in sorted_frameworks limit:5 %}
             <li>
               {% include article_link.html article=article %}
             </li>
@@ -70,24 +74,30 @@ permalink: /
   </div>
   <div class="home-column">
     <div class="home-column-inner">
-      <a href="/contribute">
+      <!-- a href="/contribute" -->
       <div class="home-icon home-icon-contribute">
       </div>
       <div class="home-column-title">
       <span>Create & Contribute</span>
       </div>
-      </a>
+      <!-- /a -->
+      <div class="home-coming-soon">
+      &nbsp;
+      </div>
     </div>
   </div>
   <div class="home-column last">
     <div class="home-column-inner">
-      <a href="/get-involved">
+      <!-- a href="/get-involved" -->
       <div class="home-icon home-icon-involved">
       </div>
       <div class="home-column-title">
       <span>Get Involved</span>
       </div>
-      </a>
+      <!-- /a -->
+      <div class="home-coming-soon">
+      &nbsp;
+      </div>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ list_title: Integrations
 items:
 
 - title: Salesforce (Lightning)
+  priority: 1
   url: https://github.com/Neotys-Labs/neoload-frameworks/tree/master/salesforce/lightning
 
 - title: ASP.NET

@@ -4,8 +4,9 @@ title: Integrations & Frameworks
 show_title: false
 permalink: /integrations-and-frameworks/
 ---
-<div>
-<div style="float:left;width:50%;padding-top:0px;">
+<div class="boxed-outer">
+
+<div class="boxed-category" style="width:50%;padding-top:0px;">
 
 <h2>Integrations</h2>
 {% assign groups = site.data.integrations.items | group_by:"category" %}
@@ -23,7 +24,7 @@ permalink: /integrations-and-frameworks/
 {% endfor %}
 
 </div>
-<div style="float:left;width:50%;">
+<div class="boxed-category" style="width:50%;padding-top:0px;">
 
 <h2>Frameworks</h2>
 <ul>

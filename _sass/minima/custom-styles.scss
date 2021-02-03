@@ -89,6 +89,9 @@ div.home-column-inner {
   display: flex;
   flex-wrap: wrap;
 }
+div.home-column-inner > a {
+  min-height:200px;
+}
 div.home-icon {
   margin: 0 auto;
   width: 150px;
@@ -105,6 +108,9 @@ div.home-column-title {
   display: inline-block;
   line-height: 3em;
 }
+div.home-column-inner > * {
+  width:100%;
+}
 div.home-column-title > span {
   vertical-align: middle;
   display: inline-block;
@@ -120,14 +126,14 @@ div.home-icon-assets {
   background-position: 35% 0%
 }
 div.home-icon-contribute {
-  background-position: 70% 0%
+  background-position: 72% 0%
 }
 div.home-icon-involved {
-  background-position: 105% 0%
+  background-position: 110% 0%
 }
 
 div.home-column-list {
-  margin-top:1em;
+  /*margin-top:1em;*/
   font-size:0.8em;
   text-align:left;
 }
@@ -172,6 +178,17 @@ div.home-column-more {
   }
 }
 
+.boxed-outer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.boxed-category {
+  float: left;
+  width: auto;
+  padding-right:1em;
+  max-width: 430px;
+}
+
 .post-header {
   color:#aaa;
 }
@@ -214,7 +231,7 @@ $scrollLength: 100vh;
   // outline: 1px solid red;
   position: absolute;
   top: $scrollLength;
-  right: 0.25rem;
+  right: 1.25rem;
   bottom: -5em;
   width: 3em;
   pointer-events: none;
@@ -259,9 +276,37 @@ $scrollLength: 100vh;
   }
 }
 
+main {
+  // leave room for the "scroll track"
+  padding: 0 3rem;
+  // required to make sure the `absolute` positioning of
+  // the anchor wrapper is indeed `relative` to this element vs. the body
+  position: relative;
+
+  // Optional, clears margin if last element is a block item
+  *:last-child {
+    margin-bottom: 0;
+  }
+}
+
 // .toc {
 //   padding: 5px;;
 //   width: 130px;
 //   z-index: 100;
 //   position: fixed;
 // }
+
+div.home-coming-soon {
+  width: 100%;
+  border-radius: 25px;
+  background:#eee;
+  min-height:6em;
+  padding-top:4em;
+}
+div.home-coming-soon::after {
+  content: "Coming soon!";
+}
+
+#breadcrumbs, #breadcrumbs > *, #breadcrumbs > a:link {
+  color:#aaa;
+}
