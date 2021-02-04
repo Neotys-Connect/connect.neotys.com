@@ -74,15 +74,23 @@ permalink: /
   </div>
   <div class="home-column">
     <div class="home-column-inner">
-      <!-- a href="/contribute" -->
+      <a href="/contribute">
       <div class="home-icon home-icon-contribute">
       </div>
       <div class="home-column-title">
       <span>Create & Contribute</span>
       </div>
-      <!-- /a -->
-      <div class="home-coming-soon">
-      &nbsp;
+      </a>
+      <div class="home-column-list">
+        Top Projects:
+        <ul>
+        {% assign sorted_projects = site.data.projects.items | sort: "priority" | reverse %}
+        {% for article in sorted_projects limit:6 %}
+          <li>
+            {% include article_link.html article=article %}
+          </li>
+        {% endfor %}
+        </ul>
       </div>
     </div>
   </div>

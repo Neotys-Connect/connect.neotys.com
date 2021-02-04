@@ -10,3 +10,82 @@ items:
   category: Functional
   priority: 1
   url: /tutorials/selenium-and-neoload
+
+- title: Worksoft Certify
+  category: Functional
+  priority: 1
+  url: https://github.com/Neotys-Labs/Worksoft-Certify
+
+- title: Ranorex
+  category: Functional
+  url: https://github.com/Neotys-Labs/Ranorex
+
+- title: IBM MQ
+  category: Messaging
+  url: https://github.com/Neotys-Labs/Connect-To-IBM-MQ-Queue
+
+- title: Tricentis Tosca
+  category: Functional
+  priority: 1
+  url: https://github.com/Neotys-Labs/Tricentis-Tosca
+
+- title: AppDynamics
+  category: APM
+  priority: 1
+  url: https://github.com/Neotys-Labs/AppDynamics
+
+- title: AMQP
+  category: IoT
+  url: https://github.com/Neotys-Labs/AMQP
+
+- title: PL/SQL
+  category: Database
+  url: https://github.com/Neotys-Labs/Database-Advanced-Actions
+
+- title: Vaadin
+  category: Messaging
+  url: https://github.com/Neotys-Labs/Vaadin
+
+- title: Kafka
+  category: Messaging
+  priority: 1
+  url: https://github.com/Neotys-Labs/kafka
+
+- title: NewRelic
+  category: APM
+  url: https://github.com/Neotys-Labs/NewRelic
+
+- title: MQTT
+  category: IoT
+  url: https://github.com/Neotys-Labs/MQTT
+
+- title: XebiaLabs XLRelease
+  category: CI/CD
+  url: https://github.com/Neotys-Labs/xlr-neotys-plugin
+
+- title: Jenkins
+  category: CI/CD
+  priority: 2
+  url: /tutorials/ci-orchestration-platforms
+
+- title: Azure DevOps
+  category: CI/CD
+  priority: 2
+  url: /tutorials/ci-orchestration-platforms
+
+- title: Gitlab
+  category: CI/CD
+  priority: 2
+  url: /tutorials/ci-orchestration-platforms
+
+- title: AWS CodeBuild
+  category: CI/CD
+  url: /tutorials/ci-orchestration-platforms
+
+- title: Bamboo
+  category: CI/CD
+  url: /tutorials/ci-orchestration-platforms
+
+- title: TeamCity
+  category: CI/CD
+  url: /tutorials/ci-orchestration-platforms

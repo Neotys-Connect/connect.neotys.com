@@ -72,6 +72,10 @@ div.home-column-list-two-lists {
   float:left;
   width:49%;
 }
+div.home-column-list-two-lists > ul {
+  margin-left:1.2em;
+}
+
 @media screen and (max-width: $minWidth) {
   div.home-column-list-two-lists {
     float:none;
@@ -86,8 +90,6 @@ div.home-column-inner {
   min-height: 350px;
   padding-left:0.5em;
   padding-right:0.5em;
-  display: flex;
-  flex-wrap: wrap;
 }
 div.home-column-inner > a {
   min-height:200px;
@@ -102,6 +104,7 @@ div.home-icon {
 }
 div.home-column-title {
   margin-top:0.3em;
+  padding-bottom:1em;
   font-size:1.5em;
   height:3em;
   position: relative;
