@@ -1,10 +1,19 @@
 list_title: Tutorials
 items:
 
+- title: Deploying NeoLoad Web
+  category: Deployment
+  visibility: home-only
+  priority: 3
+  url: /tutorials/deploying-neoload-web
+
 - title: Deploying NeoLoad Web in AWS
   category: Deployment
-  priority: 3
   url: /tutorials/deploying-neoload-web-in-aws
+
+- title: Git Integration
+  category: SCM
+  url: /tutorials/git-integration
 
 - title: Mobile app load testing
   category: Testing
@@ -25,7 +34,7 @@ items:
   priority: 2
   url: https://www.neotys.com/documents/doc/neoload/latest/2907.htm#o39346
 
-- title: Planning for heavy load testing
+- title: Plan for heavy load testing
   category: Testing
   priority: 1
   url: https://www.neotys.com/documents/doc/neoload/latest/1570.htm

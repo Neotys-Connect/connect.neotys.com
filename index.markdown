@@ -32,7 +32,7 @@ permalink: /
       <a href="/tutorials">more</a>
     </div>
   </div>
-  <div class="home-column">
+  <div class="home-column home-column-integrations-and-frameworks">
     <div class="home-column-inner">
       <a href="/integrations-and-frameworks">
       <div class="home-icon home-icon-assets">
@@ -81,6 +81,10 @@ permalink: /
       <span>Create & Contribute</span>
       </div>
       </a>
+      <div class="home-buttons">
+      <a href="/contribute-start-project"><div class="home-contribute-button">Start a Project</div></a>
+      <a href="/contribute-publish-project"><div class="home-contribute-button">Publish a Project</div></a>
+      </div>
       <div class="home-column-list">
         Top Projects:
         <ul>
@@ -96,13 +100,13 @@ permalink: /
   </div>
   <div class="home-column last">
     <div class="home-column-inner">
-      <!-- a href="/get-involved" -->
+      <a><!-- href="/get-involved" -->
       <div class="home-icon home-icon-involved">
       </div>
       <div class="home-column-title">
       <span>Get Involved</span>
       </div>
-      <!-- /a -->
+      </a>
       <div class="home-coming-soon">
       &nbsp;
       </div>
