@@ -82,8 +82,8 @@ permalink: /
       </div>
       </a>
       <div class="home-buttons">
-      <a href="/contribute-start-project"><div class="home-contribute-button">Start a Project</div></a>
-      <a href="/contribute-publish-project"><div class="home-contribute-button">Publish a Project</div></a>
+      <a href="/contribute/start"><div class="home-contribute-button">Start a Project</div></a>
+      <a href="/contribute/publish"><div class="home-contribute-button">Publish a Project</div></a>
       </div>
       <div class="home-column-list">
         Top Projects:
