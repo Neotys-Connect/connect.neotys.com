@@ -27,7 +27,7 @@ This document contains the technical details on how to set up Jekyll (to see you
 
 After submitting a Pull Request, you should soon see that checks are running, one
  of which is to deploy your branch as a unique staging site on Netlify! This is
- what the {% include core-team-link.md %} will use to visually verify that your changes are acceptable.
+ what Approvers will use to visually verify that your changes are acceptable.
 
 ![Netlify Checks on a Pull Request](assets/contributing/pull-request-netlify-checks.png)
 
@@ -39,7 +39,7 @@ If you need to fix something, simply do so locally by changing files (don't forg
 
 ### Pull Request Approvals
 
-The {% include core-team-link.md %} does it's best to respect the value of your work by reviewing
+The Connect Core Team does its best to respect the value of your work by reviewing
  and approving as quickly as humanly possible, however to make sure nefarious or plain broken
  contributions aren't automatically published to the site, we do manually review
  each pull request. Once it is approved, you will be notified by Github and if
