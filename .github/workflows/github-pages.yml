@@ -19,6 +19,7 @@ jobs:
           options: -v /github/workspace:/srv/jekyll -e JEKYLL_ENV=production
 
   github-pages:
+    needs: jekyll-bundle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
