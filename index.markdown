@@ -20,7 +20,7 @@ permalink: /
         Top searches:
         <ul>
         {% assign sorted_tutorials = site.data.tutorials.items | sort: "priority" | reverse %}
-        {% for article in sorted_tutorials limit:10 %}
+        {% for article in sorted_tutorials limit:8 %}
           <li>
             {% include article_link.html article=article %}
           </li>
@@ -89,7 +89,7 @@ permalink: /
         Top Projects:
         <ul>
         {% assign sorted_projects = site.data.projects.items | sort: "priority" | reverse %}
-        {% for article in sorted_projects limit:10 %}
+        {% for article in sorted_projects limit:8 %}
           <li>
             {% include article_link.html article=article %}
           </li>
