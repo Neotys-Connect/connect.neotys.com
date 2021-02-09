@@ -11,7 +11,8 @@ jobs:
   jekyll-bundle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          bundle exec jekyll build
+      - uses: addnab/docker-run-action@v1
+        with:
+          image: jekyll/jekyll:3.8
+          run: jekyll build
+          options: -v $GITHUB_WORKSPACE:/srv/jekyll -e JEKYLL_ENV=production
