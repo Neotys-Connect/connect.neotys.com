@@ -8,6 +8,16 @@ on:
   #   - cron: "0 0 * * *"
 
 jobs:
+
+  jekyll-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: addnab/docker-run-action@v1
+        with:
+          image: jekyll/jekyll:3.8
+          run: jekyll build
+          options: -v /github/workspace:/srv/jekyll -e JEKYLL_ENV=production
+
   github-pages:
     runs-on: ubuntu-latest
     steps:
