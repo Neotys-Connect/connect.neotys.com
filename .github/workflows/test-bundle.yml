@@ -13,5 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: helaili/jekyll-action@2.0.5
-      - name: bundle-build
-        run: bundle exec jekyll build
+        env:
+        - build_only: true
+        - ACTIONS_STEP_DEBUG: true
