@@ -15,4 +15,4 @@ jobs:
         with:
           image: jekyll/jekyll:3.8
           run: jekyll build
-          options: -v $GITHUB_WORKSPACE:/srv/jekyll -e JEKYLL_ENV=production
+          options: -v /github/workspace:/srv/jekyll -e JEKYLL_ENV=production
