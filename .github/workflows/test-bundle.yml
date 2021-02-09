@@ -1,0 +1,17 @@
+name: Build and Jekyll site static content
+
+on:
+  pull_request:
+    branches: [ main ]
+  # schedule:
+  #   - cron: "0 0 * * *"
+
+jobs:
+
+  jekyll-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: helaili/jekyll-action@2.0.5
+      - name: bundle-build
+        run: bundle exec jekyll build
