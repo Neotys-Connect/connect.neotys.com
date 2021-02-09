@@ -29,4 +29,4 @@ items:
 - key: RESTAPI
   description: Tools and solutions built on top of the NeoLoad Web REST APIs
   skill: Expert
-  details_url: /contribute/other
+  details_url: /contribute/restapi
