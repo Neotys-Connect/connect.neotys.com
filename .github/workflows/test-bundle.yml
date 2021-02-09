@@ -12,11 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: helaili/jekyll-action@2.0.5
-        env:
-        - build_only: true
-        - ACTIONS_STEP_DEBUG: true
-        - pre_build_commands: bundle exec jekyll build
       - name: Install dependencies
         run: |
-          exit 1
+          bundle exec jekyll build
