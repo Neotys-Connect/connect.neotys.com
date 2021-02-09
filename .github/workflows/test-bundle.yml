@@ -19,4 +19,4 @@ jobs:
         - pre_build_commands: bundle exec jekyll build
       - name: Install dependencies
         run: |
-          bundle exec jekyll build
+          exit 1
