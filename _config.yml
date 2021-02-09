@@ -5,6 +5,8 @@ twitter_username: neotys
 github_username:  Neotys-Connect
 url: https://connect.neotys.com
 
+core_team_text: Connect Core Team
+
 # Build settings
 theme: minima
 plugins:

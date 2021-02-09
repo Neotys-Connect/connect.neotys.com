@@ -53,8 +53,8 @@ If you want to try to add your tutorial to this site yourself, there are some th
 
 - have a working knowledge of git command line tools on your own workstation
 - have your own github account
-- familiarize yourself with and follow the [Contribution Guidelines](https://github.com/..)
-- feel free to reach out to our Connect Core Team afterwards
+- familiarize yourself with and follow the [Contribution Guidelines](https://github.com/Neotys-Connect/connect.neotys.com/blob/main/CONTRIBUTING.md)
+- feel free to reach out to our {% include core-team-link.md %} afterwards
 
 > "I tend to write my tutorials in Google docs so that I can share and collaborate
 > in the early phases with other contributors, paste in images, basically just
@@ -72,7 +72,7 @@ If you want to try to add your tutorial to this site yourself, there are some th
 
 If the above seems too daunting for you, that's okay too. It's better for your
  contribution to see the light of day than to be stuck somewhere it doesn't do
- anyone else good. Feel free to send your contributions to our Connect Core Team.
+ anyone else good. Feel free to send your contributions to our {% include core-team-link.md %}.
 
 # Examples
 

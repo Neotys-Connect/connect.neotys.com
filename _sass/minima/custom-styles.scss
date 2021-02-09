@@ -226,6 +226,7 @@ div.home-column-more {
 div.sidebar-section {
   border-left: solid 5px #eee;
   padding-left:0.5em;
+  margin-bottom: 1em;
 }
 div.sidebar-section > h3 {
   color:#aaa;
@@ -379,4 +380,8 @@ div.contribution-type-box {
   background: #eee;
   padding:1em;
   max-width:25%;
+}
+
+a.page-history {
+  color:#ccc;
 }

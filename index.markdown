@@ -20,7 +20,7 @@ permalink: /
         Top searches:
         <ul>
         {% assign sorted_tutorials = site.data.tutorials.items | sort: "priority" | reverse %}
-        {% for article in sorted_tutorials limit:6 %}
+        {% for article in sorted_tutorials limit:10 %}
           <li>
             {% include article_link.html article=article %}
           </li>
@@ -47,7 +47,7 @@ permalink: /
           Integrations:
           <ul>
           {% assign sorted_integrations = site.data.integrations.items | sort: "priority" | reverse %}
-          {% for article in sorted_integrations limit:5 %}
+          {% for article in sorted_integrations limit:7 %}
             <li>
               {% include article_link.html article=article %}
             </li>
@@ -58,7 +58,7 @@ permalink: /
           Frameworks:
           <ul>
           {% assign sorted_frameworks = site.data.frameworks.items | sort: "priority" | reverse %}
-          {% for article in sorted_frameworks limit:5 %}
+          {% for article in sorted_frameworks limit:7 %}
             <li>
               {% include article_link.html article=article %}
             </li>
@@ -89,7 +89,7 @@ permalink: /
         Top Projects:
         <ul>
         {% assign sorted_projects = site.data.projects.items | sort: "priority" | reverse %}
-        {% for article in sorted_projects limit:6 %}
+        {% for article in sorted_projects limit:10 %}
           <li>
             {% include article_link.html article=article %}
           </li>

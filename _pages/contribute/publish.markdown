@@ -30,9 +30,9 @@ The [Neotys-Connect](https://github.com/Neotys-Connect) organization on Github i
 
 - make sure there is no corporate or proprietary data in your repo
 - on Github, go to your repo's settings and use the 'Transfer Ownership' feature (to 'Neotys-Connect')
-- the Connect Core Team will receive a request to receive it and will review your repo
+- the {% include core-team-link.md %} will receive a request to receive it and will review your repo
 - once transferred, you will be made a Maintainer of your project repo
-- if you would like to revoke your repo at any time, contact the Connect Core Team
+- if you would like to revoke your repo at any time, contact the {% include core-team-link.md %}
 
 # Limited Liability
 
@@ -59,7 +59,7 @@ If you the work you did was under the express directive of an employer or client
  them first to see if it's okay to publish it. Most of the time, it is, since
  they won't be profiting from others using it too, but it doesn't hurt to check.
 
-If you would like to discuss any of this with the Connect Core Team first, just reach out.
+If you would like to discuss any of this with the {% include core-team-link.md %} first, just reach out.
 
 # Attribution
 
