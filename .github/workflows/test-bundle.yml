@@ -16,4 +16,4 @@ jobs:
         env:
         - build_only: true
         - ACTIONS_STEP_DEBUG: true
-        - pre-Build_commands: bundle exec jekyll build
+        - pre_build_commands: bundle exec jekyll build
