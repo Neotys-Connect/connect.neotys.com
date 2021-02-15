@@ -326,6 +326,23 @@ main {
 //   z-index: 100;
 //   position: fixed;
 // }
+@media screen and (min-width: $minWidth) {
+  .toc-pinned {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    position: fixed;
+    top: 20px;
+    right: 8%;
+    background: white;
+    border-left: solid 5px #eee;
+    padding-left:0.5em;
+    max-width: 25%;
+  }
+  .toc-inner {
+    overflow: scroll;
+    max-height: 85vh;
+  }
+}
 
 div.home-coming-soon {
   width: 100%;
