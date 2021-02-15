@@ -99,12 +99,15 @@ layout: default
 {% endif %}
 
 {% if page.toc %}
-  <div class="sidebar-section">
+  <div class="sidebar-section" id="toc-host">
+  <div id="toc">
   <h3>ToC</h3>
-  <div class="toc">
+  <div class="toc toc-inner">
   {{ page.toc | markdownify }}
   </div>
   </div>
+  </div>
+  <script type="text/javascript" src="/assets/scroll-toc.js"></script>
 {% endif %}
 
 {% if page.examples %}
