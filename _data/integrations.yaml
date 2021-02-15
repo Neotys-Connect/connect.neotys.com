@@ -89,3 +89,7 @@ items:
 - title: TeamCity
   category: CI/CD
   url: /tutorials/ci-orchestration-platforms
+
+- title: Adobe HDS
+  category: Messaging
+  url: https://www.neotys.com/hds

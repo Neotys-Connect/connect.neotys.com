@@ -107,9 +107,63 @@ layout: default
   </div>
 {% endif %}
 
+{% if page.examples %}
+  <div class="sidebar-section">
+    <h3>Examples</h3>
+    <ul>
+    {% for article in page.examples %}
+      <li>{% include article_link.html article=article %}</li>
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 {% if sidebar %}
   </div>
 {% endif %}
 
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
+
+<script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+  <script>
+    window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+    formbutton("create", {
+        action: "https://formspree.io/f/xleovqka",
+        title: "This page:",
+        buttonImg: "<i class='fas fa-comment' style='font-size:24px'/>",
+        fields: [{
+          name: "helped",
+          type: "radio",
+          value: "yes",
+          label: "Helped me",
+          required: true,
+        },
+        {
+          name: "helped",
+          type: "radio",
+          value: "no",
+          label: "Did not help",
+          required: true
+        },
+        {
+          name: "comment",
+          label: "Anything you'd like to share?",
+          type: "textarea",
+          placeholder: "Tell us in your own words"
+        },
+        // {
+        //   name: "path",
+        //   type: "hidden",
+        //   value: document.location.path,
+        // },
+        {
+          type: "submit"
+        }],
+        // ...
+      });
+
+  </script>
+
 </article>

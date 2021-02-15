@@ -25,7 +25,24 @@ permalink: /integrations-and-frameworks/
 <p>&nbsp;</p>
 <div class="boxed-outer">
 
+<div class="boxed-category">
 <h2 style="width:100%;">Frameworks</h2>
+NeoLoad 'frameworks' are sets of rules to correlate data tokens in recorded traffic.
+ Frameworks help you collect and run these rules instead of having to search and replace individual
+ data tokens every time you record a new workflow (NeoLoad User Path), significantly
+ reducing the time it takes to script and get your user path working correctly.
+
+<p></p>
+<div markdown="1">
+[For more information about frameworks shared on this site, see the 'neoload-frameworks' README.](https://github.com/Neotys-Connect/neoload-frameworks).
+</div>
+
+</div>
+<div class="boxed-category" style="padding-top:2em;">
+<div markdown="1">
+***NOTE:*** there are many other apps and technologies supported by NeoLoad out-of-the box.
+</div>
+<p></p>
 <ul>
 {% for article in site.data.frameworks.items %}
   <li>
@@ -33,5 +50,6 @@ permalink: /integrations-and-frameworks/
   </li>
 {% endfor %}
 </ul>
+</div>
 
 </div>
