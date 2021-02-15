@@ -3,16 +3,19 @@ items:
 
 - title: Salesforce (Lightning)
   priority: 1
-  url: https://github.com/Neotys-Labs/neoload-frameworks/tree/master/salesforce/lightning
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/salesforce
 
 - title: ASP.NET
-  url: https://github.com/Neotys-Labs/neoload-frameworks/tree/master/asp.net
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/aspnet
 
 - title: SAP
-  url: https://github.com/Neotys-Labs/neoload-frameworks/tree/master/sap
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/sap
 
 - title: 'SSO: SAML'
-  url: https://github.com/Neotys-Labs/neoload-frameworks/tree/master/saml
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/saml
 
-- title: 'CSRF'
-  url: https://github.com/Neotys-Labs/neoload-frameworks/tree/master/csrf
+- title: CSRF
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/csrf
+
+- title: Oracle Forms
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/oracleforms

@@ -4,12 +4,11 @@ title: Create & Contribute
 permalink: /contribute/
 ---
 
-
 <div class="boxed-outer">
 
   <div class="boxed-category" markdown="1">
 
-# Start a Project
+# Start a New Project
 
 What type of project are you interested in?
 
@@ -30,7 +29,7 @@ Probably good to first check if something like your idea doesn't already exist.
 
   <div class="boxed-category" markdown="1">
 
-# Contribute a Project
+# Contribute an Existing Project
 
 Got something already?
 

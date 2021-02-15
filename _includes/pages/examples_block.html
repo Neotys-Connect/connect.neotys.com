@@ -1,0 +1,9 @@
+<div class="boxed-outer">
+
+{% for article in page.examples %}
+  <div class="boxed-category">
+    {% include article_link.html article=article %}
+  </div>
+{% endfor %}
+
+</div>
