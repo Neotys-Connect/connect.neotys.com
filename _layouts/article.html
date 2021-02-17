@@ -1,6 +1,8 @@
 ---
 layout: default
 ---
+{% if page.permalink %}{% assign page_uuid=page.permalink %}{% endif %}
+
 <article class="post">
 <div class="article-container">
 
@@ -98,6 +100,13 @@ layout: default
   </div>
 {% endif %}
 
+<div class="sidebar-section sidebar-comments" style="display:none">
+  <a href="#comments" onclick="scrollToCommentsDetail()">
+  <h3>Comments</h3>
+  {% if page_uuid %}<span id="comment-count" class="disqus-comment-count" data-disqus-identifier="{{ page_uuid }}" data-disqus-url="{{ site.url }}{{ page_uuid }}">Count</span>{% endif %}
+  </a>
+</div>
+
 {% if page.toc %}
   <div class="sidebar-section" id="toc-host">
   <div id="toc">
@@ -128,7 +137,6 @@ layout: default
 </div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
-
 <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
   <script>
     window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
@@ -156,11 +164,16 @@ layout: default
           type: "textarea",
           placeholder: "Tell us in your own words"
         },
-        // {
-        //   name: "path",
-        //   type: "hidden",
-        //   value: document.location.path,
-        // },
+        {
+          name: "_path",
+          type: "hidden",
+          style: {
+            label: {
+              width: "1%"
+            }
+          },
+          value: ("" + document.location),
+        },
         {
           type: "submit"
         }],
@@ -168,5 +181,72 @@ layout: default
       });
 
   </script>
+
+  <div style="clear:both;"></div>
+
+  <div id="comments" class="comments-outer" style="{% if sidebar %}max-width:600px;{% endif %}">
+    <a href="#comments" name="comments"></a>
+    <div class="comments-none"><a href="#comments-bottom" onclick="setCommentDetailVisibility(true)">Add a comment</a></div>
+    <div id="disqus_thread" class="comments-detail" style="display:none;"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+        var disqus_config = function () {
+          this.page.url = getCommentsUrl();
+          {% if page_uuid %}this.page.identifier = "{{ page_uuid }}"{% endif %};
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://neotys-connect.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+
+  <script>
+  function getCommentsUrl() {
+    return {% if page_uuid %}"{{ site.url }}{{ page_uuid }}"{% else %}document.location+""{% endif %}
+  }
+  function setCommentDetailVisibility(show) {
+    var detail = $(".comments-detail")
+    if(show) {
+      $(".comments-none").hide();
+      detail.show()
+      $(".comments-outer").addClass("comments-outer-detailed")
+      scrollToCommentsDetail()
+    }
+    else {
+      $(".comments-none").show();
+      detail.hide()
+      $(".comments-outer").removeClass("comments-outer-detailed")
+    }
+  }
+  function scrollToCommentsDetail() {
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $(".comments-detail").offset().top
+    }, 300);
+  }
+  var intComments = setInterval(function() {
+    if($ && DISQUSWIDGETS) {
+      var count = document.getElementById("comment-count");
+      count = $(count)
+      DISQUSWIDGETS.getCount({reset: true});
+      var text = count.text()
+      var num = text.split(" ")[0];
+      num = !(num.trim().length > 0 && !isNaN(parseInt(num))) ? 0 : parseInt(num);
+      if(num > 0) {
+        setCommentDetailVisibility(true)
+        $(".sidebar-comments").show()
+      }
+      clearInterval(intComments)
+    }
+  },100)
+  </script>
+  <script id="dsq-count-scr" src="//neotys-connect.disqus.com/count.js" async></script>
 
 </article>
