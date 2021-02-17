@@ -4,22 +4,25 @@ layout: default
 {% if page.permalink %}{% assign page_uuid=page.permalink %}{% endif %}
 
 <article class="post">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title | escape }}</h1>
+  </header>
 <div class="article-container">
 
 {% assign sidebar=false %}
 {% if page.videos %}{% assign sidebar=true %}{% endif %}
 {% if page.contributors %}{% assign sidebar=true %}{% endif %}
 {% if page.documentation %}{% assign sidebar=true %}{% endif %}
+{% if page.academy %}{% assign sidebar=true %}{% endif %}
+{% if page.repo %}{% assign sidebar=true %}{% endif %}
+{% if page.videos %}{% assign sidebar=true %}{% endif %}
+{% if page.examples %}{% assign sidebar=true %}{% endif %}
 {% if page.toc %}{% assign sidebar=true %}{% endif %}
 
 {% if sidebar %}
   <div class="article-content-with-sidebar">
 {% endif %}
 
-
-<header class="post-header">
-  <h1 class="post-title">{{ page.title | escape }}</h1>
-</header>
 
 {{ content }}
 
@@ -61,9 +64,21 @@ layout: default
 {% if page.documentation %}
   <div class="sidebar-section">
   <h3>Product Docs</h3>
+  {% if page.documentation.size > 1 %}<ul>{% endif %}
   {% for link in page.documentation %}
-  <a href="{{ link }}" target="_blank">Visit documentation</a>
+    {% assign text="Visit Documentation" %}
+    {% assign url=link %}
+    {% if link.url %}
+      {% assign url=link.url %}
+      {% if link.title %}
+        {% assign text=link.title %}
+      {% else %}
+        {% assign text=link.url %}
+      {% endif %}
+    {% endif %}
+    {% if page.documentation.size > 1 %}<li>{% endif %}<a href="{{ url }}" target="_blank">{{ text }}</a>{% if page.documentation.size > 1 %}</li>{% endif %}
   {% endfor %}
+  {% if page.documentation.size > 1 %}</ul>{% endif %}
   </div>
 {% endif %}
 
