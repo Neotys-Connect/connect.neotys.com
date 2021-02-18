@@ -19,6 +19,11 @@ layout: default
 {% if page.examples %}{% assign sidebar=true %}{% endif %}
 {% if page.toc %}{% assign sidebar=true %}{% endif %}
 
+{% assign show_comments=true %}
+{% unless page.comments == blank %}
+{% assign show_comments=page.comments %}
+{% endunless %}
+
 {% if sidebar %}
   <div class="article-content-with-sidebar">
 {% endif %}
@@ -115,12 +120,14 @@ layout: default
   </div>
 {% endif %}
 
+{% unless show_comments == false %}
 <div class="sidebar-section sidebar-comments" style="display:none">
   <a href="#comments" onclick="scrollToCommentsDetail()">
   <h3>Comments</h3>
   {% if page_uuid %}<span id="comment-count" class="disqus-comment-count" data-disqus-identifier="{{ page_uuid }}" data-disqus-url="{{ site.url }}{{ page_uuid }}">Count</span>{% endif %}
   </a>
 </div>
+{% endunless %}
 
 {% if page.toc %}
   <div class="sidebar-section" id="toc-host">
@@ -131,7 +138,7 @@ layout: default
   </div>
   </div>
   </div>
-  <script type="text/javascript" src="/assets/scroll-toc.js"></script>
+  <script async type="text/javascript" src="/assets/scroll-toc.js"></script>
 {% endif %}
 
 {% if page.examples %}
@@ -197,6 +204,7 @@ layout: default
 
   </script>
 
+  {% unless show_comments == false %}
   <div style="clear:both;"></div>
 
   <div id="comments" class="comments-outer" style="{% if sidebar %}max-width:600px;{% endif %}">
@@ -263,5 +271,7 @@ layout: default
   },100)
   </script>
   <script id="dsq-count-scr" src="//neotys-connect.disqus.com/count.js" async></script>
+
+  {% endunless %}
 
 </article>

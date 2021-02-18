@@ -34,12 +34,14 @@
       function updateOffsiteLinksToOpenInBlank() {
         var host = document.location.hostname
         var els = $("a:not(:target)").each(function(i,o) {
-          console.log(o.href)
           if((o.href+"").trim().length > 0 && (o.href.indexOf('://'+host)<1 && o.text != "Back to neotys.com")) {
-            $(o).attr('target','_blank')
-            var span = $('<span class="external-link-icon"></span>')
-            span.click(function() { $(o).click() })
-            span.insertAfter(o)
+            if($(o).attr('is-external-link') != "true") {
+              $(o).attr('is-external-link','true')
+              $(o).attr('target','_blank')
+              var span = $('<span class="external-link-icon"></span>')
+              span.click(function() { $(o).click() })
+              span.insertAfter(o)
+            }
           }
         });
         //alert(els.length);

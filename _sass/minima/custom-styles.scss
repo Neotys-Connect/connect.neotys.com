@@ -30,7 +30,12 @@ a:hover {
 .site-header >> a {
   color: $neotysDark;
 }
-.site-title, .site-title:visited, .site-nav .page-link { color: $neotysDark; }
+.site-title {
+  font-size: 1.4em;
+}
+.site-title, .site-title:visited, .site-nav .page-link {
+  color: $neotysDark;
+}
 
 @media screen and (min-width: $minWidth) {
   .site-nav {
@@ -92,7 +97,9 @@ div.home-column:first-child >> .home-column-list {
 div.home-column-list-two-lists {
   float:left;
   width:50%;
-  margin-bottom: 2em;
+  font-size:0.9em;
+  padding-top:0.2em;
+  padding-bottom: 1em;
 }
 div.home-column-list-two-lists > ul {
   margin-left:1.2em;
@@ -109,7 +116,7 @@ div.last {
   border-right: none;
 }
 div.home-column-inner {
-  min-height: 375px;
+  min-height: 400px;
   padding-left:0.5em;
   padding-right:0.5em;
 }
@@ -416,4 +423,17 @@ a.page-history {
 }
 .comments-outer-detailed {
   /*border-top:solid 5px $lightGray;*/
+}
+
+.home-get-involved-details {
+  font-size: 0.8em;
+}
+
+
+img.community-person-thumbnail {
+  width:96px;
+  height:96px;
+  border-radius: 50%;
+  padding: 0.25rem;
+  border-color:red;
 }

@@ -1,0 +1,38 @@
+meeting_reoccurrence:
+  interval: monthly
+  pattern: "second Tuesday of the month"
+  time: "10-11am EST"
+next_meeting:
+  date: "Tuesday, March 9, 2021"
+  agenda: |
+    - Community overview and how to contribute
+    - Is this the best date/time for everyone?
+    - First and immediate contribution target projects
+    - Open discussion: what should we focus on as improvements?
+members:
+- name: Paul Bruce
+  organization: Neotys
+  image: https://d33wubrfki0l68.cloudfront.net/182e7694d8aa273f309b4ac4a8b7361d58928c0b/22676/events/2020-boston/organizers/paulsbruce.jpg
+  github: https://github.com/paulsbruce
+  website: http://paulsbruce.io
+  twitter: https://twitter.com/paulsbruce
+  linkedin: https://www.linkedin.com/in/paulsbruce/
+- name: Scott Moore
+  organization: Scott Moore Consulting
+  image: https://avatars.githubusercontent.com/u/24315509?s=460&v=4
+  github: https://github.com/smcllc
+  website: http://scottmoore.consulting/
+  twitter: https://twitter.com/loadtester
+  linkedin: https://www.linkedin.com/in/scottmooreconsulting/
+- name: Thomas Theol
+  organization: Neotys
+  image: https://www.neotys.com/wp-content/uploads/2018/09/Speaker_Thomas_theol@1x.png
+  github: https://github.com/ttheol
+  linkedin: https://www.linkedin.com/in/thomas-theol-93036940/
+- name: Henrik Rexed
+  organization: Neotys
+  image: https://www.neotys.com/wp-content/uploads/2017/10/Henrik_Rexhed.png
+  github: https://github.com/NeotysLab
+  website: https://knightloader.wordpress.com/
+  twitter: https://twitter.com/hrexed
+  linkedin: https://www.linkedin.com/in/hrexed/

@@ -42,7 +42,6 @@ permalink: /
       </div>
       </a>
       <div class="home-column-list">
-        <div>
           <div class="home-column-list-two-lists">
           Integrations:
           <ul>
@@ -65,7 +64,6 @@ permalink: /
           {% endfor %}
           </ul>
           </div>
-        </div>
       </div>
     </div>
     <div class="home-column-more">
@@ -73,7 +71,7 @@ permalink: /
     </div>
   </div>
   <div class="home-column">
-    <div class="home-column-inner">
+    <div class="home-column-inner" id="home-column-inner-contribute">
       <a href="/contribute">
       <div class="home-icon home-icon-contribute">
       </div>
@@ -85,31 +83,54 @@ permalink: /
       <a href="/contribute/start"><div class="home-contribute-button">Start a Project</div></a>
       <a href="/contribute/publish"><div class="home-contribute-button">Publish a Project</div></a>
       </div>
-      <div class="home-column-list">
-        Top Projects:
-        <ul>
-        {% assign sorted_projects = site.data.projects.items | sort: "priority" | reverse %}
-        {% for article in sorted_projects limit:8 %}
-          <li>
-            {% include article_link.html article=article %}
-          </li>
-        {% endfor %}
+      <div class="home-column-list" id="top-projects" style="display:none;">
+        Recent Projects:
+        <ul id="top-projects-list">
+        <li class="top-projects-item"><a href="https://github.com/Neotys-Connect">click here for more</a></li>
         </ul>
       </div>
     </div>
   </div>
   <div class="home-column last">
     <div class="home-column-inner">
-      <a><!-- href="/get-involved" -->
+      <a href="/get-involved">
       <div class="home-icon home-icon-involved">
       </div>
       <div class="home-column-title">
       <span>Get Involved</span>
       </div>
-      </a>
-      <div class="home-coming-soon">
-      &nbsp;
+      <div class="home-get-involved-details">
+      For regular contributors or those looking to regularly contribute:<br />
+      <br />
+      Next Meeting: <br />
+      {{ site.data.roundtable.next_meeting.date }} <br /> {{ site.data.roundtable.meeting_reoccurrence.time }}
+      <br /><br />
+      (agenda and contact)
       </div>
+      </a>
+
     </div>
   </div>
 </div>
+
+<script async src="/assets/connect-repos.js"></script>
+<script>
+window.__reposListLoaded = false;
+var intIndexLoad = setInterval(function() {
+  if($ && loadIndexReposList) {
+    window.__reposListLoaded = true;
+    $("#top-projects").hide()
+    $('<div class="home-column-more"><a href="https://github.com/Neotys-Connect">more</a></div>').insertAfter("#home-column-inner-contribute")
+    loadIndexReposList({
+      target:"#top-projects-list",
+      max: 5,
+      after: (repos) => {
+        $("#top-projects").show()
+      }
+    });
+  }
+
+  if($ && window.__reposListLoaded)
+    clearTimeout(intIndexLoad);
+},100)
+</script>

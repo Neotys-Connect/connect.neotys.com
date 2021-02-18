@@ -2,6 +2,7 @@
 layout: article
 title: Contact the Connect Core Team
 permalink: /contact/coreteam
+comments: false
 ---
 
 <!--- iframe id="contact_form" width="300" height="250" frameBorder="0" src="/contact/contact_coreteam_form.html">
