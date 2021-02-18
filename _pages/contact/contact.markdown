@@ -2,6 +2,7 @@
 layout: article
 title: Contact Us
 permalink: /contact
+comments: false
 ---
 
 Please chose from the following options:
