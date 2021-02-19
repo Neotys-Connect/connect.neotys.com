@@ -450,21 +450,15 @@ mongodb://neoloadweb:<password>@**cluster0-shard-00-00.redacted.mongodb.net:2701
 
 Note that we are referencing each shard with a port, and the database name (we can use admin). We also have to set ssl=true for it to work. This is a requirement by Mongo Atlas. We will have to address this when we create a custom YAML file in the section titled, “Deploy the Helm chart”.
 
-We set up a user id and password for accessing the database:
+We set up a user id and password for accessing the database.
 
-
-
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image14.png "image_tooltip")
-
+[Image]
 
 We added a user called neoloadweb and set a password. We will use this information in our YAML file when we run the command in the section “Deploy the Helm chart”.
 
 We will want to whitelist only the IP address(es) needed for connections to the database, and deny all others. The easiest way to find the IP the EKS cluster will use for external outbound traffic is to look at the Elastic IP menu on AWS:
 
-
-
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image15.png "image_tooltip")
-
+[Image]
 
 This IP address is automatically assigned to the cluster during creation unless you specify that it not be public and private only.
 
@@ -507,6 +501,10 @@ This would tell you that IP 3.139.107.100 is the one being used to the outside w
 
 
 ## Install NeoLoad Web
+
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image14.png "image_tooltip")
+
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image15.png "image_tooltip")
 
 Using these instructions:
 
