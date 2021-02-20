@@ -1,6 +1,6 @@
 ---
 layout: article
-title: About
+title: About Connect
 permalink: /about/
 toc: |
   - [What is Neotys Connect?](#what-is-neotys-connect)

@@ -255,7 +255,7 @@ layout: default
     }, 300);
   }
   var intComments = setInterval(function() {
-    if($ && DISQUSWIDGETS) {
+    if(typeof $ != 'undefined' && typeof DISQUSWIDGETS != 'undefined') {
       var count = document.getElementById("comment-count");
       count = $(count)
       DISQUSWIDGETS.getCount({reset: true});

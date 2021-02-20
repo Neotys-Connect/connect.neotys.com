@@ -115,22 +115,19 @@ permalink: /
 
 <script async src="/assets/connect-repos.js"></script>
 <script>
-window.__reposListLoaded = false;
 var intIndexLoad = setInterval(function() {
-  if($ && loadIndexReposList) {
-    window.__reposListLoaded = true;
+  if(typeof $ != 'undefined' && loadReposList) {
+    clearTimeout(intIndexLoad);
     $("#top-projects").hide()
-    $('<div class="home-column-more"><a href="https://github.com/Neotys-Connect">more</a></div>').insertAfter("#home-column-inner-contribute")
-    loadIndexReposList({
+    $('<div class="home-column-more"><a href="/projects">more</a></div>').insertAfter("#home-column-inner-contribute")
+    loadReposList({
       target:"#top-projects-list",
-      max: 5,
+      filter: repo => repo.owner.login == "Neotys-Connect",
+      max: 6,
       after: (repos) => {
         $("#top-projects").show()
       }
     });
   }
-
-  if($ && window.__reposListLoaded)
-    clearTimeout(intIndexLoad);
 },100)
 </script>

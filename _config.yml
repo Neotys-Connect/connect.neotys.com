@@ -17,8 +17,7 @@ include:
 
 header_pages:
   - _pages/about.markdown
-  - title: Back to neotys.com
-    url: https://www.neotys.com
+  - _pages/other-neotys-sites.markdown
 
 google_analytics: G-WZ89N6ZSFK
 

@@ -34,7 +34,7 @@
       function updateOffsiteLinksToOpenInBlank() {
         var host = document.location.hostname
         var els = $("a:not(:target)").each(function(i,o) {
-          if((o.href+"").trim().length > 0 && (o.href.indexOf('://'+host)<1 && o.text != "Back to neotys.com")) {
+          if((o.href+"").trim().length > 0 && (o.href.indexOf('://'+host)<1 && $(o).attr('use-same-tab') != "true")) {
             if($(o).attr('is-external-link') != "true") {
               $(o).attr('is-external-link','true')
               $(o).attr('target','_blank')

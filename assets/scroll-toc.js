@@ -14,7 +14,7 @@ setInterval(function(){
 function scrollFunction() {
   var toc = document.getElementById("toc");
   var host = document.getElementById("toc-host");
-  if($) {
+  if(typeof $ != 'undefined') {
     toc = $(toc);
     host = $(host);
     var eltop = host.offset().top
