@@ -151,6 +151,8 @@ div.home-column-title > span {
 }
 div.home-column-more {
   clear:both;
+  font-size:0.8em;
+  text-align:center;
 }
 div.home-icon-tutorials {
   background-position: 0px 0px;
@@ -176,9 +178,6 @@ div.home-column-list {
 }
 div.home-column-list > ul {
   margin-left:0.9em;
-}
-div.home-column-more {
-  font-size:0.8em;
 }
 
 @media screen and (min-width: $minWidth) {
