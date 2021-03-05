@@ -120,6 +120,25 @@ layout: default
   </div>
 {% endif %}
 
+{% if page.slides %}
+  <div class="sidebar-section">
+  <h3>Slides</h3>
+  {% for slides in page.slides %}
+    {% if slides.type == "google" %}
+      {% if slides.pubid %}
+        <iframe src="https://docs.google.com/presentation/d/e/{{ slides.pubid }}/embed?start=true&loop=true&delayms=3000" frameborder="0" width="140" height="77" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+        <br />
+        <a href="https://docs.google.com/presentation/d/e/{{ slides.pubid }}/pub?start=false&loop=false&delayms=3000" target="_blank">(open in new tab)</a>
+      {% else %}
+        <a href="http://docs.google.com/document/d/{{ slides.docid }}/export?format=pdf">On Google (PDF)</a>
+      {% endif %}
+    {% else %}
+      <a href="{{ slides.url }}">{{ slides.title }}</a>
+    {% endif %}
+  {% endfor %}
+  </div>
+{% endif %}
+
 {% unless show_comments == false %}
 <div class="sidebar-section sidebar-comments" style="display:none">
   <a href="#comments" onclick="scrollToCommentsDetail()">
