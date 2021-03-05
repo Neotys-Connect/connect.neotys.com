@@ -15,6 +15,15 @@ slides:
   - type: google
     docid: 19ldKFuET6ost-dkq_aPiIw0SIOf8ltFcKAUYS1iAVMk
     pubid: 2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E
+toc: |
+  - [Why NeoLoad as-code](#why-neoload-as-code)
+  - [Examples](#examples)
+  - [Training / Workshops](#training--workshops)
+  - [Getting Started](#getting-started)
+  - [DSL Schema Support](#dsl-schema-support)
+    * [VS Code Configuration](#vs-code-configuration)
+    * [IntelliJ Configuration](#intellij-configuration)
+  - [Additional CI and CLI workshops](#additional-ci-and-cli-workshops)
 ---
 
 NeoLoad as-code is a Domain-specific Language (DSL) for YAML and JSON to describe
