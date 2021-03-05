@@ -7,6 +7,11 @@ items:
   priority: 3
   url: /tutorials/deploying-neoload-web
 
+- title: NeoLoad as-code
+  category: Testing
+  priority: 2
+  url: /tutorials/neoload-as-code
+
 - title: Deploying NeoLoad Web in AWS
   category: Deployment
   url: /tutorials/deploying-neoload-web-in-aws
