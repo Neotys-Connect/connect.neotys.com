@@ -30,6 +30,7 @@
     <script type="text/javascript">
       $(function () {   //  <- jquery is not yet initialized
         updateOffsiteLinksToOpenInBlank()
+        updateArticleFrameSizes()
       });
       function updateOffsiteLinksToOpenInBlank() {
         var host = document.location.hostname
@@ -45,6 +46,29 @@
           }
         });
         //alert(els.length);
+      }
+      function updateArticleFrameSizes() {
+        var els = $("iframe").each(function(i,o) {
+          var el = $(o)
+          var aspectratio = parseFloat(el.attr("aspectratio"));
+          if(isNaN(aspectratio)) {
+            aspectratio = el.height() / el.width();
+            el.attr("aspectratio",aspectratio)
+
+            var wrapper = $('<div class="iframe-wrapper">')
+            wrapper.css({
+              'max-width':''+el.parent().width()+"px",
+              'max-height':''+(el.parent().width()*aspectratio)+"px",
+              'width':'100vw',
+              'height':(100*aspectratio)+'vw',
+              'margin':'0 auto 1em auto'
+            })
+            el.wrap(wrapper).removeAttr("width").removeAttr("height").css({
+              'width':'100%',
+              'height':'100%'
+            })
+          }
+        });
       }
     </script>
 

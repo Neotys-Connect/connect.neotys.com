@@ -3,18 +3,26 @@ layout: article
 title: NeoLoad as-code
 category: DevOps
 permalink: /tutorials/neoload-as-code
-support: Community
-videos:
-  - https://www.youtube.com/embed/YDCvymJUZrk
+support: Neotys
 contributors:
-  - text: Paul Bruce
-    url: https://github.com/paulsbruce
+- text: Neotys
+  url: https://neotys.com
+- text: Paul Bruce
+  url: https://github.com/paulsbruce
+academy:
+- https://academy.neotys.com/courses/foradvancedusers/lessons/neoload-as-code/
+documentation:
+- https://www.neotys.com/documents/doc/neoload/latest/38635.htm
+videos:
+- https://www.youtube.com/embed/YDCvymJUZrk
 repo:
-  - https://github.com/Neotys-Connect/neoload-as-code
+- https://github.com/Neotys-Connect/neoload-as-code
+- https://github.com/Neotys-Labs/neoload-models/blob/v3/neoload-project/doc/v3/project.md
+- https://github.com/Neotys-Labs/neoload-cli
 slides:
-  - type: google
-    docid: 19ldKFuET6ost-dkq_aPiIw0SIOf8ltFcKAUYS1iAVMk
-    pubid: 2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E
+- type: google
+  docid: 19ldKFuET6ost-dkq_aPiIw0SIOf8ltFcKAUYS1iAVMk
+  pubid: 2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E
 toc: |
   - [Why NeoLoad as-code](#why-neoload-as-code)
   - [Examples](#examples)
