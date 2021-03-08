@@ -436,3 +436,31 @@ img.community-person-thumbnail {
   padding: 0.25rem;
   border-color:red;
 }
+
+.home-bande {
+  border: solid 1px $lightGray;
+  border-radius: 1rem;
+  //padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  margin:2em;
+}
+.home-bande-image {
+  background-color:red;
+  filter: grayscale(100%);
+  width:20%;
+  height:10em;
+  float:left;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.home-bande-text {
+  width:78%;
+  min-height:5em;
+  float:left;
+  margin-left:2%;
+}

@@ -4,8 +4,6 @@ title: Other Neotys Sites
 permalink: /other-neotys-sites
 comments: false
 sites:
-- name: neotys.com
-  url: https://www.neotys.com
 - name: Neotys Academy
   url: https://academy.neotys.com
 - name: Support Center
@@ -14,6 +12,8 @@ sites:
   url: https://ideas-neotys.ideas.dimelo.com/
 - name: Questions and Answers
   url: https://faq-neotys.answers.dimelo.com/
+- name: neotys.com
+  url: https://www.neotys.com
 ---
 
 <div class="boxed-outer">
