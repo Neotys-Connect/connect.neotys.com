@@ -39,9 +39,11 @@
             if($(o).attr('is-external-link') != "true") {
               $(o).attr('is-external-link','true')
               $(o).attr('target','_blank')
-              var span = $('<span class="external-link-icon"></span>')
-              span.click(function() { $(o).click() })
-              span.insertAfter(o)
+              if($(o).attr('show-external-link') != "false") {
+                var span = $('<span class="external-link-icon"></span>')
+                span.click(function() { $(o).click() })
+                span.insertAfter(o)
+              }
             }
           }
         });

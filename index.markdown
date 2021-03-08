@@ -113,6 +113,54 @@ permalink: /
   </div>
 </div>
 
+<div class="home-bande">
+  <div class="home-bande-image" style="background-image:url(https://miro.medium.com/max/4118/1*EuT_9qPbsVpJ_mT51BLXzQ.jpeg)">
+  </div>
+  <div class="home-bande-text">
+  <a href="https://bit.ly/perf21-survey" show-external-link="false">
+    <h3>Performance Practices Survey</h3>
+    <div markdown="1">
+We are currently running a research project to understand granularly
+ how organizations manage and improve their performance practices.
+
+Take the survey and help us out!
+</div>
+    </a>
+  </div>
+</div>
+
+<div class="home-bande">
+  <div class="home-bande-text">
+  <a href="/tutorials/neoload-as-code" show-external-link="false">
+    <h3>NeoLoad as-code Workshop</h3>
+    <div markdown="1">
+NeoLoad as-code is a Domain-specific Language (DSL) for YAML and JSON to describe load testing scripts (NeoLoad User Paths), variables, and other test execution settings.
+
+We have a 3hr workshop recording on it here!
+</div>
+    </a>
+  </div>
+  <div class="home-bande-image" style="background-image:url(https://png.pngtree.com/png-vector/20190406/ourlarge/pngtree-yaml-file-document-icon-png-image_917597.jpg)">
+  </div>
+</div>
+
+<div class="home-bande">
+  <div class="home-bande-image" style="background-image:url(https://www.alliance-conference.com/media/rsvjnrbv.jpg)">
+  </div>
+  <div class="home-bande-text">
+  <a href="https://www.neotys.com/neoload-jenkins-workshop-series" show-external-link="false">
+    <h3>NeoLoad in Jenkins/CI Workshop Series</h3>
+    <div markdown="1">
+Looking to integrate load and performance testing into CI pipelines? Neotys works
+ with customers all the time to right-fit these feedback loops into DevOps and Continuous
+ Delivery paradigms.
+
+Click here to view the on-demand workshop series!
+</div>
+    </a>
+  </div>
+</div>
+
 <script async src="/assets/connect-repos.js"></script>
 <script>
 var intIndexLoad = setInterval(function() {
