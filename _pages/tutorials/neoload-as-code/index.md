@@ -14,7 +14,7 @@ academy:
 documentation:
 - https://www.neotys.com/documents/doc/neoload/latest/38635.htm
 videos:
-- https://www.youtube.com/embed/YDCvymJUZrk
+- https://www.youtube.com/embed/VJ0ouJSSDr4
 repo:
 - https://github.com/Neotys-Connect/neoload-as-code
 - https://github.com/Neotys-Labs/neoload-models/blob/v3/neoload-project/doc/v3/project.md
@@ -76,7 +76,7 @@ There are a ton of [examples from our training workshops in the 'neoload-as-code
 
 The video and deck used for our public training workshop on 2021-03-04 are below:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/YDCvymJUZrk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VJ0ouJSSDr4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E/embed?start=true&loop=true&delayms=10000" frameborder="0" width="480" height="299" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
