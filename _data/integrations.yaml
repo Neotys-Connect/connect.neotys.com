@@ -3,7 +3,7 @@ items:
 
 - title: Dynatrace
   category: APM
-  priority: 1
+  priority: 2
   url: /tutorials/dynatrace-and-neoload
 
 - title: Selenium

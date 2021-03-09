@@ -19,3 +19,6 @@ items:
 
 - title: Oracle Forms
   url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/oracleforms
+
+- tite: Pega Systems
+  url: https://github.com/Neotys-Connect/neoload-frameworks/tree/main/Pega
