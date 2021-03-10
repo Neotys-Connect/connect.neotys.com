@@ -180,9 +180,14 @@ layout: default
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
 <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
   <script>
+    function feedbackSubmit(data,setStatus) {
+      gtag('event', 'submit', {'event_category' : 'feedback', 'event_label' : document.title});
+      return data;
+    }
     window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
     formbutton("create", {
         action: "https://formspree.io/f/xleovqka",
+        onSubmit: feedbackSubmit,
         title: "This page:",
         buttonImg: "<i class='fas fa-comment' style='font-size:24px'/>",
         fields: [{
@@ -228,7 +233,7 @@ layout: default
 
   <div id="comments" class="comments-outer" style="{% if sidebar %}max-width:600px;{% endif %}">
     <a href="#comments" name="comments"></a>
-    <div class="comments-none"><a href="#comments-bottom" onclick="setCommentDetailVisibility(true)">Add a comment</a></div>
+    <div class="comments-none"><a href="#comments-bottom" onclick="setCommentDetailVisibility(true,this)">Add a comment</a></div>
     <div id="disqus_thread" class="comments-detail" style="display:none;"></div>
     <script>
         /**
@@ -254,7 +259,12 @@ layout: default
   function getCommentsUrl() {
     return {% if page_uuid %}"{{ site.url }}{{ page_uuid }}"{% else %}document.location+""{% endif %}
   }
-  function setCommentDetailVisibility(show) {
+  var manualCommentsOrigin = null;
+  function setCommentDetailVisibility(show,origin) {
+    if(origin != undefined && manualCommentsOrigin == null) {
+      manualCommentsOrigin = origin;
+      gtag('event', 'click add', {'event_category' : 'discussion', 'event_label' : document.title});
+    }
     var detail = $(".comments-detail")
     if(show) {
       $(".comments-none").hide();
