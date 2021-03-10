@@ -184,10 +184,18 @@ layout: default
       gtag('event', 'submit', {'event_category' : 'feedback', 'event_label' : document.title});
       return data;
     }
+    function feedbackOnResponse(ok, setStatus) {
+      if(ok) {
+        setTimeout(function() {
+          $("#formbutton-iframe").hide()
+        },4000)
+      }
+    }
     window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
     formbutton("create", {
         action: "https://formspree.io/f/xleovqka",
         onSubmit: feedbackSubmit,
+        onResponse: feedbackOnResponse,
         title: "This page:",
         buttonImg: "<i class='fas fa-comment' style='font-size:24px'/>",
         fields: [{
@@ -211,8 +219,10 @@ layout: default
           placeholder: "Tell us in your own words"
         },
         {
-          name: "_path",
-          type: "hidden",
+          name: "source",
+          label: "Page/Topic",
+          type: "text",
+          readonly: true,
           style: {
             label: {
               width: "1%"
