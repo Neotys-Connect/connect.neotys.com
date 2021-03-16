@@ -481,3 +481,16 @@ img.community-person-thumbnail {
     top: 0;
     left: 0;
 }
+
+video {
+  /* override other styles to make responsive */
+  width: 100%    !important;
+  height: auto   !important;
+}
+
+h1,h2,h3,h4 {
+  margin-top:1em;
+}
+pre.highlight {
+  margin-bottom:1em;
+}
