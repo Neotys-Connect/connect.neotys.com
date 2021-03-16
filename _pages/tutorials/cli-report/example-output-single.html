@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+    <script type="text/javascript">function appendOnLoad(handler) { window[ addEventListener ? 'addEventListener' : 'attachEvent' ]( addEventListener ? 'load' : 'onload', handler ) }
+
+function toggleDisplay(id) {
+  var el = d3.select("#"+id)
+  var visible = el.style("display") != "none";
+  el.style("display", visible ? "none" : "inline");
+}
+
+function getDateTime(relativeToStartMs) {
+  var since = startDateEpoch + relativeToStartMs;
+  return new Date(since);
+}
+
+function getWH(el) {
+  var node = el.node();
+  var styl = window.getComputedStyle(node)
+  var ret = {
+    width: styl.width,
+    height: styl.height
+  }
+  ret.width = parseInt(ret.width == null || ret.width < 10 ? 200 : ret.width);
+  ret.height = parseInt(ret.height == null || ret.height < 10 ? 200 : ret.height);
+  return ret;
+}
+
+function plotSVG(divParent, specs) {
+  specs = Array.isArray(specs) ? specs : [specs]
+  if(!specs.every(d => typeof(d.data)!='undefined' && typeof(d.xPlot)!='undefined' && typeof(d.yPlot)!='undefined'))
+    throw "plotSVG was provided data incompatible with use"
+
+  specs.forEach(function(spec) {
+    spec.typX = spec.data.length > 0 ? getTypeName(spec.xPlot(spec.data[0])) : "number";
+    spec.typY = spec.data.length > 0 ? getTypeName(spec.yPlot(spec.data[0])) : "number";
+  })
+
+  for(spec of specs) {
+    spec.title = typeof(spec.title)!='undefined' ? spec.title : "Unknown";
+    spec.color = typeof(spec.color)!='undefined' ? spec.color : "gray";
+  }
+
+  var specs_y_axis = specs.filter(spec => !(spec.typY == "number" && d3.max(spec.data, spec.yPlot)==0))
+
+  var legend_cols = 4
+  var legend = addLegend(divParent, specs,legend_cols)
+
+  var parentBox = getWH(divParent);
+
+  var legend_height = Math.round(specs.length / 3) * 20;
+  var h_padding_per = 40
+  var h_total_padding = Math.round(specs.length / 2) * h_padding_per;
+
+  // set the dimensions and margins of the graph
+  var margin = {top: 10, right: 60, bottom: 30, left: 60},
+      width = parentBox.width - margin.left - margin.right - h_total_padding,
+      height = parentBox.height - legend_height - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = divParent
+    .append("svg")
+      .attr("width", width + margin.left + margin.right + h_total_padding * 2)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + (margin.left + (h_total_padding/2)) + "," + margin.top + ")");
+
+  var all_x_are_dates = specs.every(spec => getTypeName(spec.xPlot(spec.data[0])) === "Date")
+  var all_x = null;
+  var is_y_axis_left = true;
+
+  for(var i=0; i<specs.length; i++) {
+    var spec = specs[i];
+
+    // Add X axis --> it is a date format
+    var x = getD3scalerForType(spec.typX, spec.data, spec.xPlot)
+      .range([ 0, width ]);
+    if(all_x_are_dates) {
+      if(all_x == null) {
+        all_x = x;
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+      }
+      x = all_x;
+    }
+
+    if(specs_y_axis.some(s => spec.title === s.title)) {
+      // Add Y axis
+      var y = getD3scalerForType(spec.typY, spec.data, spec.yPlot)
+        .range([ height, 0 ]);
+      var y_axis = is_y_axis_left ? d3.axisLeft(y) : d3.axisRight(y)
+      var rightTransform = is_y_axis_left ? 0 : width
+      var h_offset = Math.floor(i / 2) * h_padding_per * (is_y_axis_left ? -1 : 1)
+      is_y_axis_left = !is_y_axis_left;
+      svg.append("g")
+        .attr("stroke", spec.color)
+        .attr("transform", "translate(" + (rightTransform + h_offset) + ",0)")
+        .call(y_axis);
+    }
+
+    var path = svg.append("path")
+          .datum(spec.data)
+          .attr("fill", "none")
+          .attr("stroke", spec.color)
+          .attr("stroke-width", 1.5)
+          .attr("d", d3.line()
+            .x(function(d) { return x(spec.xPlot(d)) })
+            .y(function(d) { return y(spec.yPlot(d)) })
+          )
+  }
+
+  divParent.append(() => legend.node());
+  legend.style("width",getWH(divParent).width / 2)
+  legend.attr("transform", "translate(0," + (-margin.bottom) + ")")
+  var whLegend = getWH(legend)
+  divParent.style("height", getWH(divParent).height + whLegend.height)
+}
+
+function getTypeName(obj) {
+  if(obj == null) return "string";
+  if(Object.prototype.toString.call(obj) === '[object Date]')
+    return "Date";
+  else
+    return typeof(obj);
+}
+
+function getD3scalerForType(typeName, data, plot) {
+  if(typeName == "Date")
+    return d3.scaleTime()
+      .domain(d3.extent(data, plot))
+  else
+    return d3.scaleLinear()
+      .domain([0, Math.max(1,d3.max(data, plot))])
+}
+
+function addLegend(divParent, specs, cols_per) {
+  var rows = []
+  for(var i=0; i<specs.length; i+=cols_per) {
+    var row = specs.slice(i, i+cols_per)
+    rows.push(row)
+  }
+  var legend = d3.create("table")
+                .attr("class","legend")
+  var tablebody = legend.append("tbody");
+        rows = tablebody
+                .selectAll("tr")
+                .data(rows)
+                .enter()
+                .append("tr");
+        cells = rows.selectAll("td")
+                .data(function(d) {
+                  return d;
+                })
+                .enter()
+                .append("td")
+                .style("color",d => d.color)
+                .text(d => d.title + (typeof(d.units)!='undefined'?" (" + d.units + ")":""));
+  return legend
+}
+
+function specTimeLine(title, units, color, data, l_time_field, l_num_field) {
+  var ret = {
+      title: title,
+      data: data,
+      xPlot: d => getDateTime(l_time_field(d)),
+      yPlot: l_num_field
+    }
+  if(units != null && typeof(units)!='undefined')
+    ret.units = units
+  ret.color = (color != null && typeof(color)!='undefined') ? color : "gray"
+  return ret
+}
+
+function createSpecsTable(specs) {
+  var table = d3.create("table")
+  var header = table.append("thead").append("tr");
+      header.selectAll("th")
+            .data(["Color", "Scale", "Measurement", "Min", "Avg", "Max", "Med", "Std. Dev."])
+            .enter()
+            .append("th")
+            .text(function(d) { return d; });
+  var tablebody = table.append("tbody");
+        rows = tablebody
+                .selectAll("tr")
+                .data(specs)
+                .enter()
+                .append("tr");
+        cells = rows.selectAll("td")
+                .data(function(d) {
+                  var commons = getMinMaxAvgMedianStdDev(d.data, d.yPlot)
+                  var arr = [
+                    { text: ".", background_color: d.color },
+                    //{ text: d.title + (typeof(d.units)!='undefined'?" (" + d.units + ")":"") },
+                    { text: (typeof(d.units)!='undefined'?" (" + d.units + ")":""), },
+                    { text: d.title, },
+                    { text: commons.minimum },
+                    { text: commons.mean },
+                    { text: commons.maximum },
+                    { text: commons.median },
+                    { text: commons.deviation },
+                  ];
+                  arr.forEach(a => a.__data__ = d)
+                  return arr
+                })
+                .enter()
+                .append("td")
+                .style("background-color", d => (typeof(d.background_color!='undefined') ? d.background_color : "transparent"))
+                .style("color", d => (typeof(d.__data__.color!='undefined') ? d.__data__.color : "black"))
+                .text(d => d.text);
+  return table
+}
+
+function getMinMaxAvgMedianStdDev(data, plot) {
+  // if "number"
+  var vals = data.map(d => plot(d));
+  return {
+    minimum: d3.min(vals),
+    maximum: d3.max(vals),
+    mean: d3.mean(vals),
+    median: d3.median(vals),
+    variance: d3.variance(vals),
+    deviation: d3.deviation(vals)
+  }
+}</script>
+    <script type="text/javascript">
+    var startDateEpoch = 1607532638343
+    </script>
+  </head>
+  <body>
+
+<div class="clearfix">
+  <div style="float:left;width:80%;">
+    <h1 style="text-align:left;">fullTest-shared-moduleX-3.237.235.2</h1>
+  </div>
+  <div style="float:right;width:20%;padding-top:0.75em;">
+    <div class="logo" style="margin:auto auto;transform: scale(0.5);">&nbsp;</div>
+  </div>
+</div>
+
+<script type="text/javascript">
+window.ctrl_user_load = [{"AVG": 0.0, "from": 0, "to": 1000}, {"AVG": 1.0, "from": 1000, "to": 2000}, {"AVG": 1.0, "from": 2000, "to": 3000}, {"AVG": 1.0, "from": 3000, "to": 4000}, {"AVG": 1.0, "from": 4000, "to": 5000}, {"AVG": 1.0, "from": 5000, "to": 6000}, {"AVG": 1.0, "from": 6000, "to": 7000}, {"AVG": 2.0, "from": 7000, "to": 8000}, {"AVG": 2.0, "from": 8000, "to": 9000}, {"AVG": 2.0, "from": 9000, "to": 10000}, {"AVG": 2.0, "from": 10000, "to": 11000}, {"AVG": 3.0, "from": 11000, "to": 12000}, {"AVG": 3.0, "from": 12000, "to": 13000}, {"AVG": 3.0, "from": 13000, "to": 14000}, {"AVG": 3.0, "from": 14000, "to": 15000}, {"AVG": 3.0, "from": 15000, "to": 16000}, {"AVG": 4.0, "from": 16000, "to": 17000}, {"AVG": 4.0, "from": 17000, "to": 18000}, {"AVG": 4.0, "from": 18000, "to": 19000}, {"AVG": 4.0, "from": 19000, "to": 20000}, {"AVG": 4.0, "from": 20000, "to": 21000}, {"AVG": 5.0, "from": 21000, "to": 22000}, {"AVG": 5.0, "from": 22000, "to": 23000}, {"AVG": 5.0, "from": 23000, "to": 24000}, {"AVG": 5.0, "from": 24000, "to": 25000}, {"AVG": 5.0, "from": 25000, "to": 26000}, {"AVG": 6.0, "from": 26000, "to": 27000}, {"AVG": 6.0, "from": 27000, "to": 28000}, {"AVG": 6.0, "from": 28000, "to": 29000}, {"AVG": 6.0, "from": 29000, "to": 30000}, {"AVG": 6.0, "from": 30000, "to": 31000}, {"AVG": 7.0, "from": 31000, "to": 32000}, {"AVG": 7.0, "from": 32000, "to": 33000}, {"AVG": 7.0, "from": 33000, "to": 34000}, {"AVG": 7.0, "from": 34000, "to": 35000}, {"AVG": 7.0, "from": 35000, "to": 36000}, {"AVG": 8.0, "from": 36000, "to": 37000}, {"AVG": 8.0, "from": 37000, "to": 38000}, {"AVG": 8.0, "from": 38000, "to": 39000}, {"AVG": 8.0, "from": 39000, "to": 40000}, {"AVG": 8.0, "from": 40000, "to": 41000}, {"AVG": 9.0, "from": 41000, "to": 42000}, {"AVG": 9.0, "from": 42000, "to": 43000}, {"AVG": 9.0, "from": 43000, "to": 44000}, {"AVG": 9.0, "from": 44000, "to": 45000}, {"AVG": 9.0, "from": 45000, "to": 46000}, {"AVG": 10.0, "from": 46000, "to": 47000}, {"AVG": 10.0, "from": 47000, "to": 48000}, {"AVG": 10.0, "from": 48000, "to": 49000}, {"AVG": 10.0, "from": 49000, "to": 50000}, {"AVG": 10.0, "from": 50000, "to": 51000}, {"AVG": 10.0, "from": 51000, "to": 52000}, {"AVG": 10.0, "from": 52000, "to": 53000}, {"AVG": 10.0, "from": 53000, "to": 54000}, {"AVG": 10.0, "from": 54000, "to": 55000}, {"AVG": 10.0, "from": 55000, "to": 56000}, {"AVG": 10.0, "from": 56000, "to": 57000}, {"AVG": 10.0, "from": 57000, "to": 58000}, {"AVG": 10.0, "from": 58000, "to": 59000}, {"AVG": 10.0, "from": 59000, "to": 60000}, {"AVG": 10.0, "from": 60000, "to": 61000}, {"AVG": 10.0, "from": 61000, "to": 62000}, {"AVG": 10.0, "from": 62000, "to": 63000}, {"AVG": 10.0, "from": 63000, "to": 64000}, {"AVG": 10.0, "from": 64000, "to": 65000}, {"AVG": 10.0, "from": 65000, "to": 66000}, {"AVG": 10.0, "from": 66000, "to": 67000}, {"AVG": 10.0, "from": 67000, "to": 68000}, {"AVG": 10.0, "from": 68000, "to": 69000}, {"AVG": 10.0, "from": 69000, "to": 70000}, {"AVG": 10.0, "from": 70000, "to": 71000}, {"AVG": 10.0, "from": 71000, "to": 72000}, {"AVG": 10.0, "from": 72000, "to": 73000}, {"AVG": 10.0, "from": 73000, "to": 74000}, {"AVG": 10.0, "from": 74000, "to": 75000}, {"AVG": 10.0, "from": 75000, "to": 76000}, {"AVG": 10.0, "from": 76000, "to": 77000}, {"AVG": 10.0, "from": 77000, "to": 78000}, {"AVG": 10.0, "from": 78000, "to": 79000}, {"AVG": 10.0, "from": 79000, "to": 80000}, {"AVG": 10.0, "from": 80000, "to": 81000}, {"AVG": 10.0, "from": 81000, "to": 82000}, {"AVG": 10.0, "from": 82000, "to": 83000}, {"AVG": 10.0, "from": 83000, "to": 84000}, {"AVG": 10.0, "from": 84000, "to": 85000}, {"AVG": 10.0, "from": 85000, "to": 86000}, {"AVG": 10.0, "from": 86000, "to": 87000}, {"AVG": 10.0, "from": 87000, "to": 88000}, {"AVG": 10.0, "from": 88000, "to": 89000}, {"AVG": 10.0, "from": 89000, "to": 90000}, {"AVG": 10.0, "from": 90000, "to": 91000}, {"AVG": 10.0, "from": 91000, "to": 92000}, {"AVG": 10.0, "from": 92000, "to": 93000}, {"AVG": 10.0, "from": 93000, "to": 94000}, {"AVG": 10.0, "from": 94000, "to": 95000}, {"AVG": 10.0, "from": 95000, "to": 96000}, {"AVG": 10.0, "from": 96000, "to": 97000}, {"AVG": 10.0, "from": 97000, "to": 98000}, {"AVG": 10.0, "from": 98000, "to": 99000}, {"AVG": 10.0, "from": 99000, "to": 100000}, {"AVG": 10.0, "from": 100000, "to": 101000}, {"AVG": 10.0, "from": 101000, "to": 102000}, {"AVG": 10.0, "from": 102000, "to": 103000}, {"AVG": 10.0, "from": 103000, "to": 104000}, {"AVG": 10.0, "from": 104000, "to": 105000}, {"AVG": 10.0, "from": 105000, "to": 106000}, {"AVG": 10.0, "from": 106000, "to": 107000}, {"AVG": 10.0, "from": 107000, "to": 108000}, {"AVG": 10.0, "from": 108000, "to": 109000}, {"AVG": 10.0, "from": 109000, "to": 110000}, {"AVG": 10.0, "from": 110000, "to": 111000}, {"AVG": 10.0, "from": 111000, "to": 112000}, {"AVG": 10.0, "from": 112000, "to": 113000}, {"AVG": 10.0, "from": 113000, "to": 114000}, {"AVG": 10.0, "from": 114000, "to": 115000}, {"AVG": 10.0, "from": 115000, "to": 116000}, {"AVG": 10.0, "from": 116000, "to": 117000}, {"AVG": 10.0, "from": 117000, "to": 118000}, {"AVG": 10.0, "from": 118000, "to": 119000}, {"AVG": 10.0, "from": 119000, "to": 120000}, {"AVG": 10.0, "from": 120000, "to": 121000}];
+window.all_requests = [{"AVG_DURATION": 20.333334, "AVG_TTFB": 20.333334, "COUNT": 3, "ELEMENTS_PER_SECOND": 3.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 30, "MAX_TTFB": 30, "MIN_DURATION": 15, "MIN_TTFB": 15, "THROUGHPUT": 1493.0, "from": 12000, "to": 13000}, {"AVG_DURATION": 22.666666, "AVG_TTFB": 22.666666, "COUNT": 3, "ELEMENTS_PER_SECOND": 3.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 33, "MAX_TTFB": 33, "MIN_DURATION": 17, "MIN_TTFB": 17, "THROUGHPUT": 1501.0, "from": 13000, "to": 14000}, {"AVG_DURATION": 16.0, "AVG_TTFB": 16.0, "COUNT": 3, "ELEMENTS_PER_SECOND": 3.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 16, "MIN_TTFB": 16, "THROUGHPUT": 1505.0, "from": 14000, "to": 15000}, {"AVG_DURATION": 18.5, "AVG_TTFB": 18.5, "COUNT": 4, "ELEMENTS_PER_SECOND": 4.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 22, "MAX_TTFB": 22, "MIN_DURATION": 16, "MIN_TTFB": 16, "THROUGHPUT": 1984.0, "from": 15000, "to": 16000}, {"AVG_DURATION": 16.75, "AVG_TTFB": 16.75, "COUNT": 4, "ELEMENTS_PER_SECOND": 4.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 19, "MAX_TTFB": 19, "MIN_DURATION": 15, "MIN_TTFB": 15, "THROUGHPUT": 1996.0, "from": 16000, "to": 17000}, {"AVG_DURATION": 17.0, "AVG_TTFB": 17.0, "COUNT": 4, "ELEMENTS_PER_SECOND": 4.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 16, "MIN_TTFB": 16, "THROUGHPUT": 1996.0, "from": 17000, "to": 18000}, {"AVG_DURATION": 28.0, "AVG_TTFB": 28.0, "COUNT": 4, "ELEMENTS_PER_SECOND": 4.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 42, "MAX_TTFB": 42, "MIN_DURATION": 14, "MIN_TTFB": 14, "THROUGHPUT": 1988.0, "from": 18000, "to": 19000}, {"AVG_DURATION": 19.25, "AVG_TTFB": 19.25, "COUNT": 4, "ELEMENTS_PER_SECOND": 4.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 30, "MAX_TTFB": 30, "MIN_DURATION": 15, "MIN_TTFB": 15, "THROUGHPUT": 1992.0, "from": 19000, "to": 20000}, {"AVG_DURATION": 15.6, "AVG_TTFB": 15.6, "COUNT": 5, "ELEMENTS_PER_SECOND": 5.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 15, "MIN_TTFB": 15, "THROUGHPUT": 2497.0, "from": 20000, "to": 21000}, {"AVG_DURATION": 122.4, "AVG_TTFB": 122.4, "COUNT": 5, "ELEMENTS_PER_SECOND": 5.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 552, "MAX_TTFB": 552, "MIN_DURATION": 14, "MIN_TTFB": 14, "THROUGHPUT": 2493.0, "from": 21000, "to": 22000}, {"AVG_DURATION": 15.2, "AVG_TTFB": 15.2, "COUNT": 5, "ELEMENTS_PER_SECOND": 5.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 17, "MAX_TTFB": 17, "MIN_DURATION": 14, "MIN_TTFB": 14, "THROUGHPUT": 2497.0, "from": 22000, "to": 23000}, {"AVG_DURATION": 18.0, "AVG_TTFB": 18.0, "COUNT": 5, "ELEMENTS_PER_SECOND": 5.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 26, "MAX_TTFB": 26, "MIN_DURATION": 14, "MIN_TTFB": 14, "THROUGHPUT": 2493.0, "from": 23000, "to": 24000}, {"AVG_DURATION": 14.4, "AVG_TTFB": 14.4, "COUNT": 5, "ELEMENTS_PER_SECOND": 5.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 14, "MIN_TTFB": 14, "THROUGHPUT": 2497.0, "from": 24000, "to": 25000}, {"AVG_DURATION": 16.8, "AVG_TTFB": 16.8, "COUNT": 5, "ELEMENTS_PER_SECOND": 5.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 25, "MAX_TTFB": 25, "MIN_DURATION": 14, "MIN_TTFB": 14, "THROUGHPUT": 2491.0, "from": 25000, "to": 26000}, {"AVG_DURATION": 15.5, "AVG_TTFB": 15.5, "COUNT": 6, "ELEMENTS_PER_SECOND": 6.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 20, "MAX_TTFB": 20, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 2988.0, "from": 26000, "to": 27000}, {"AVG_DURATION": 14.833333, "AVG_TTFB": 14.833333, "COUNT": 6, "ELEMENTS_PER_SECOND": 6.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 2988.0, "from": 27000, "to": 28000}, {"AVG_DURATION": 14.833333, "AVG_TTFB": 14.833333, "COUNT": 6, "ELEMENTS_PER_SECOND": 6.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 17, "MAX_TTFB": 17, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 2992.0, "from": 28000, "to": 29000}, {"AVG_DURATION": 42.833332, "AVG_TTFB": 42.833332, "COUNT": 6, "ELEMENTS_PER_SECOND": 6.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 184, "MAX_TTFB": 184, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 2988.0, "from": 29000, "to": 30000}, {"AVG_DURATION": 23.142857, "AVG_TTFB": 23.142857, "COUNT": 7, "ELEMENTS_PER_SECOND": 7.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 72, "MAX_TTFB": 72, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 3485.0, "from": 30000, "to": 31000}, {"AVG_DURATION": 13.857142, "AVG_TTFB": 13.857142, "COUNT": 7, "ELEMENTS_PER_SECOND": 7.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3489.0, "from": 31000, "to": 32000}, {"AVG_DURATION": 45.42857, "AVG_TTFB": 45.42857, "COUNT": 7, "ELEMENTS_PER_SECOND": 7.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 241, "MAX_TTFB": 241, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3501.0, "from": 32000, "to": 33000}, {"AVG_DURATION": 13.285714, "AVG_TTFB": 13.285714, "COUNT": 7, "ELEMENTS_PER_SECOND": 7.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 3485.0, "from": 33000, "to": 34000}, {"AVG_DURATION": 29.714285, "AVG_TTFB": 29.714285, "COUNT": 7, "ELEMENTS_PER_SECOND": 7.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 128, "MAX_TTFB": 128, "MIN_DURATION": 13, "MIN_TTFB": 13, "THROUGHPUT": 3489.0, "from": 34000, "to": 35000}, {"AVG_DURATION": 15.125, "AVG_TTFB": 15.125, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 24, "MAX_TTFB": 24, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3992.0, "from": 35000, "to": 36000}, {"AVG_DURATION": 13.0, "AVG_TTFB": 13.0, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3980.0, "from": 36000, "to": 37000}, {"AVG_DURATION": 12.875, "AVG_TTFB": 12.875, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 13, "MAX_TTFB": 13, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3984.0, "from": 37000, "to": 38000}, {"AVG_DURATION": 14.375, "AVG_TTFB": 14.375, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3992.0, "from": 38000, "to": 39000}, {"AVG_DURATION": 14.75, "AVG_TTFB": 14.75, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 20, "MAX_TTFB": 20, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3980.0, "from": 39000, "to": 40000}, {"AVG_DURATION": 13.333333, "AVG_TTFB": 13.333333, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4493.0, "from": 40000, "to": 41000}, {"AVG_DURATION": 12.888889, "AVG_TTFB": 12.888889, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4481.0, "from": 41000, "to": 42000}, {"AVG_DURATION": 14.875, "AVG_TTFB": 14.875, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 24, "MAX_TTFB": 24, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 3992.0, "from": 42000, "to": 43000}, {"AVG_DURATION": 18.0, "AVG_TTFB": 18.0, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 60, "MAX_TTFB": 60, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4481.0, "from": 43000, "to": 44000}, {"AVG_DURATION": 13.555555, "AVG_TTFB": 13.555555, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 20, "MAX_TTFB": 20, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4489.0, "from": 44000, "to": 45000}, {"AVG_DURATION": 19.5, "AVG_TTFB": 19.5, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 58, "MAX_TTFB": 58, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4988.0, "from": 45000, "to": 46000}, {"AVG_DURATION": 13.5, "AVG_TTFB": 13.5, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4976.0, "from": 46000, "to": 47000}, {"AVG_DURATION": 15.333333, "AVG_TTFB": 15.333333, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 28, "MAX_TTFB": 28, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4483.0, "from": 47000, "to": 48000}, {"AVG_DURATION": 12.333333, "AVG_TTFB": 12.333333, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4481.0, "from": 48000, "to": 49000}, {"AVG_DURATION": 12.5, "AVG_TTFB": 12.5, "COUNT": 8, "ELEMENTS_PER_SECOND": 8.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 10, "MIN_TTFB": 10, "THROUGHPUT": 3992.0, "from": 49000, "to": 50000}, {"AVG_DURATION": 28.7, "AVG_TTFB": 28.7, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 177, "MAX_TTFB": 177, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 50000, "to": 51000}, {"AVG_DURATION": 13.7, "AVG_TTFB": 13.7, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4984.0, "from": 51000, "to": 52000}, {"AVG_DURATION": 13.4, "AVG_TTFB": 13.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 19, "MAX_TTFB": 19, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 52000, "to": 53000}, {"AVG_DURATION": 15.2, "AVG_TTFB": 15.2, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 24, "MAX_TTFB": 24, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4972.0, "from": 53000, "to": 54000}, {"AVG_DURATION": 13.8, "AVG_TTFB": 13.8, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 23, "MAX_TTFB": 23, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 54000, "to": 55000}, {"AVG_DURATION": 13.4, "AVG_TTFB": 13.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 20, "MAX_TTFB": 20, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 55000, "to": 56000}, {"AVG_DURATION": 12.3, "AVG_TTFB": 12.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 56000, "to": 57000}, {"AVG_DURATION": 12.4, "AVG_TTFB": 12.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4980.0, "from": 57000, "to": 58000}, {"AVG_DURATION": 12.6, "AVG_TTFB": 12.6, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 58000, "to": 59000}, {"AVG_DURATION": 13.444445, "AVG_TTFB": 13.444445, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4481.0, "from": 59000, "to": 60000}, {"AVG_DURATION": 13.1, "AVG_TTFB": 13.1, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 60000, "to": 61000}, {"AVG_DURATION": 14.6, "AVG_TTFB": 14.6, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 25, "MAX_TTFB": 25, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4988.0, "from": 61000, "to": 62000}, {"AVG_DURATION": 12.7, "AVG_TTFB": 12.7, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 17, "MAX_TTFB": 17, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4972.0, "from": 62000, "to": 63000}, {"AVG_DURATION": 38.7, "AVG_TTFB": 38.7, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 266, "MAX_TTFB": 266, "MIN_DURATION": 10, "MIN_TTFB": 10, "THROUGHPUT": 4984.0, "from": 63000, "to": 64000}, {"AVG_DURATION": 23.4, "AVG_TTFB": 23.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 119, "MAX_TTFB": 119, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 64000, "to": 65000}, {"AVG_DURATION": 13.8, "AVG_TTFB": 13.8, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 21, "MAX_TTFB": 21, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4976.0, "from": 65000, "to": 66000}, {"AVG_DURATION": 13.7, "AVG_TTFB": 13.7, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 24, "MAX_TTFB": 24, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4980.0, "from": 66000, "to": 67000}, {"AVG_DURATION": 12.0, "AVG_TTFB": 12.0, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 13, "MAX_TTFB": 13, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 67000, "to": 68000}, {"AVG_DURATION": 12.1, "AVG_TTFB": 12.1, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 68000, "to": 69000}, {"AVG_DURATION": 14.0, "AVG_TTFB": 14.0, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 25, "MAX_TTFB": 25, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4984.0, "from": 69000, "to": 70000}, {"AVG_DURATION": 50.4, "AVG_TTFB": 50.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 234, "MAX_TTFB": 234, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 70000, "to": 71000}, {"AVG_DURATION": 13.4, "AVG_TTFB": 13.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 20, "MAX_TTFB": 20, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 71000, "to": 72000}, {"AVG_DURATION": 14.222222, "AVG_TTFB": 14.222222, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4487.0, "from": 72000, "to": 73000}, {"AVG_DURATION": 12.9, "AVG_TTFB": 12.9, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4976.0, "from": 73000, "to": 74000}, {"AVG_DURATION": 12.7, "AVG_TTFB": 12.7, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4980.0, "from": 74000, "to": 75000}, {"AVG_DURATION": 14.6, "AVG_TTFB": 14.6, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 21, "MAX_TTFB": 21, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4988.0, "from": 75000, "to": 76000}, {"AVG_DURATION": 11.666667, "AVG_TTFB": 11.666667, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 13, "MAX_TTFB": 13, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4481.0, "from": 76000, "to": 77000}, {"AVG_DURATION": 16.5, "AVG_TTFB": 16.5, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 38, "MAX_TTFB": 38, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 77000, "to": 78000}, {"AVG_DURATION": 12.5, "AVG_TTFB": 12.5, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 78000, "to": 79000}, {"AVG_DURATION": 13.3, "AVG_TTFB": 13.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 19, "MAX_TTFB": 19, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4972.0, "from": 79000, "to": 80000}, {"AVG_DURATION": 12.4, "AVG_TTFB": 12.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 9, "MIN_TTFB": 9, "THROUGHPUT": 4984.0, "from": 80000, "to": 81000}, {"AVG_DURATION": 14.4, "AVG_TTFB": 14.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 81000, "to": 82000}, {"AVG_DURATION": 12.9, "AVG_TTFB": 12.9, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 18, "MAX_TTFB": 18, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 82000, "to": 83000}, {"AVG_DURATION": 12.444445, "AVG_TTFB": 12.444445, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4483.0, "from": 83000, "to": 84000}, {"AVG_DURATION": 12.1, "AVG_TTFB": 12.1, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 13, "MAX_TTFB": 13, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 84000, "to": 85000}, {"AVG_DURATION": 11.8, "AVG_TTFB": 11.8, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 13, "MAX_TTFB": 13, "MIN_DURATION": 10, "MIN_TTFB": 10, "THROUGHPUT": 4984.0, "from": 85000, "to": 86000}, {"AVG_DURATION": 15.3, "AVG_TTFB": 15.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 26, "MAX_TTFB": 26, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 86000, "to": 87000}, {"AVG_DURATION": 33.11111, "AVG_TTFB": 33.11111, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 196, "MAX_TTFB": 196, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4477.0, "from": 87000, "to": 88000}, {"AVG_DURATION": 32.3, "AVG_TTFB": 32.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 219, "MAX_TTFB": 219, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 88000, "to": 89000}, {"AVG_DURATION": 31.555555, "AVG_TTFB": 31.555555, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 182, "MAX_TTFB": 182, "MIN_DURATION": 12, "MIN_TTFB": 12, "THROUGHPUT": 4493.0, "from": 89000, "to": 90000}, {"AVG_DURATION": 27.9, "AVG_TTFB": 27.9, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 171, "MAX_TTFB": 171, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 90000, "to": 91000}, {"AVG_DURATION": 11.6, "AVG_TTFB": 11.6, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 10, "MIN_TTFB": 10, "THROUGHPUT": 4984.0, "from": 91000, "to": 92000}, {"AVG_DURATION": 11.666667, "AVG_TTFB": 11.666667, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 10, "MIN_TTFB": 10, "THROUGHPUT": 4479.0, "from": 92000, "to": 93000}, {"AVG_DURATION": 12.444445, "AVG_TTFB": 12.444445, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 17, "MAX_TTFB": 17, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4489.0, "from": 93000, "to": 94000}, {"AVG_DURATION": 12.1, "AVG_TTFB": 12.1, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 94000, "to": 95000}, {"AVG_DURATION": 13.111111, "AVG_TTFB": 13.111111, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 19, "MAX_TTFB": 19, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4475.0, "from": 95000, "to": 96000}, {"AVG_DURATION": 29.222221, "AVG_TTFB": 29.222221, "COUNT": 9, "ELEMENTS_PER_SECOND": 9.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 171, "MAX_TTFB": 171, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4493.0, "from": 96000, "to": 97000}, {"AVG_DURATION": 13.4, "AVG_TTFB": 13.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 22, "MAX_TTFB": 22, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 97000, "to": 98000}, {"AVG_DURATION": 13.3, "AVG_TTFB": 13.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 19, "MAX_TTFB": 19, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 98000, "to": 99000}, {"AVG_DURATION": 11.6, "AVG_TTFB": 11.6, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 13, "MAX_TTFB": 13, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 99000, "to": 100000}, {"AVG_DURATION": 12.1, "AVG_TTFB": 12.1, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 14, "MAX_TTFB": 14, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 100000, "to": 101000}, {"AVG_DURATION": 12.8, "AVG_TTFB": 12.8, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 15, "MAX_TTFB": 15, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4984.0, "from": 101000, "to": 102000}, {"AVG_DURATION": 23.8, "AVG_TTFB": 23.8, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 131, "MAX_TTFB": 131, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 102000, "to": 103000}, {"AVG_DURATION": 28.3, "AVG_TTFB": 28.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 155, "MAX_TTFB": 155, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4972.0, "from": 103000, "to": 104000}, {"AVG_DURATION": 12.4, "AVG_TTFB": 12.4, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 17, "MAX_TTFB": 17, "MIN_DURATION": 10, "MIN_TTFB": 10, "THROUGHPUT": 4984.0, "from": 104000, "to": 105000}, {"AVG_DURATION": 11.8, "AVG_TTFB": 11.8, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 16, "MAX_TTFB": 16, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 105000, "to": 106000}, {"AVG_DURATION": 32.5, "AVG_TTFB": 32.5, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 216, "MAX_TTFB": 216, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4976.0, "from": 106000, "to": 107000}, {"AVG_DURATION": 45.5, "AVG_TTFB": 45.5, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 333, "MAX_TTFB": 333, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4980.0, "from": 107000, "to": 108000}, {"AVG_DURATION": 16.3, "AVG_TTFB": 16.3, "COUNT": 10, "ELEMENTS_PER_SECOND": 10.0, "ERRORS": 0, "ERRORS_PER_SECOND": 0.0, "ERROR_RATE": 0.0, "MAX_DURATION": 58, "MAX_TTFB": 58, "MIN_DURATION": 11, "MIN_TTFB": 11, "THROUGHPUT": 4988.0, "from": 108000, "to": 109000}];
+</script>
+
+<h3>General Details</h3>
+Run Date: 2020-12-09 16:50:38<br />
+Period: 2020-12-09 16:50:38 - 2020-12-09 16:52:39<br />
+Run Duration: 2 minutes, 1 second<br />
+<br />
+Status: PASSED<br />
+Author: Tester 01<br />
+
+<h3>Description/Conclusion</h3>
+Started by Jenkins user anonymous on 3.237.235.2<br />
+
+<h3>Workload Characteristics</h3>
+<div class="clearfix">
+  <div style="float:left;width:50%;">
+    Max Running Users: <br />
+    Average Hits per Second: 7.909091 <br />
+    Total Hits: 957<br />
+    Total Passed Transactions per Second: 7.909091<br />
+    Total Transactions (Success): 957<br />
+    Total Transactions (Failed): 0<br />
+  </div>
+  <div style="float:right;width:50%;">
+    <div id="dWorkload" style="height:200px;"></div>
+    <script type="text/javascript">
+    appendOnLoad(function() {
+      graphWorkload(d3.select('#dWorkload'), window.ctrl_user_load, window.all_requests)
+    })
+    </script>
+  </div>
+</div>
+
+<script type="text/javascript">
+function graphWorkload(el, ctrl_user_load, req_data) {
+  var specs = []
+  specs.push(specTimeLine("User Load", "VUs", "blue", ctrl_user_load, d => d.from, d => d.AVG))
+  specs.push(specTimeLine("Rate", "el/s", "purple", req_data, d => d.from, d => d.ELEMENTS_PER_SECOND))
+  specs.push(specTimeLine("Errors", null, "red", req_data, d => d.from, d => d.ERRORS))
+  specs.push(specTimeLine("Duration", "ms", "green", req_data, d => d.from, d => d.AVG_DURATION))
+  plotSVG(el, specs)
+}
+
+</script>
+
+<h3>Transactions</h3>
+<table>
+<thead>
+<tr>
+<td>Name</td>
+<td>Count</td>
+<td>TPS</td>
+<td>Min Dur</td>
+<td>Avg Dur</td>
+<td>Max Dur</td>
+<td>Total</td>
+<td>Success</td>
+<td>Fail</td>
+<td>p50</td>
+<td>p90</td>
+<td>p95</td>
+<td>p99</td>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td><a href="javascript:toggleDisplay('dca680582-d553-4f69-a337-4526190e1650')">ex_2_0_geosearch_get_mock \ Actions \ External Geo-lookup</a></td>
+<td>828</td>
+<td>7.909091</td>
+<td>0.009</td>
+<td>0.018</td>
+<td>0.552</td>
+<td>828</td>
+<td>828</td>
+<td>0</td>
+<td>0.013</td>
+<td>0.018</td>
+<td>0.023</td>
+<td>0.183</td>
+</tr>
+<tr>
+<td colspan="13" class="graph">
+  <div id="dca680582-d553-4f69-a337-4526190e1650" class="expandable graph" style="height:200px;"></div>
+  <script type="text/javascript">
+  appendOnLoad(function() {
+    var data = [];
+    graphTransaction(d3.select('#dca680582-d553-4f69-a337-4526190e1650'), data)
+  })
+  </script>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+<script type="text/javascript">
+function graphTransaction(el, data) {
+  var specs = [];
+  specs.push(specTimeLine("User Load", "VUs", "blue", window.ctrl_user_load, d => d.from, d => d.AVG))
+  specs.push(specTimeLine("Rate", "el/s", "purple", data, d => d.from, d => d.ELEMENTS_PER_SECOND))
+  specs.push(specTimeLine("Errors", null, "red", data, d => d.from, d => d.ERRORS))
+  specs.push(specTimeLine("Duration", "ms", "green", data, d => d.from, d => d.AVG_DURATION))
+  plotSVG(el, specs)
+}
+</script>
+
+<h3>Ext. Data</h3>
+
+    No external data in this test.
+
+
+<h3>Running Vitrual Users</h3>
+<div class="clearfix">
+  <div>
+    <div id="dRunningVUs" style="min-height:500px;"></div>
+    <script type="text/javascript">
+    appendOnLoad(function() {
+      graphRunningVUs(d3.select('#dRunningVUs'), window.ctrl_user_load, window.all_requests)
+    })
+    </script>
+  </div>
+</div>
+
+<script type="text/javascript">
+function graphRunningVUs(el, ctrl_user_load, req_data) {
+  var specs = []
+  specs.push(specTimeLine("User Load", "VUs", "blue", ctrl_user_load, d => d.from, d => d.AVG))
+  plotSVG(el, specs)
+  el.append(() => createSpecsTable(specs.filter(s => s.title==="User Load")).node());
+}
+
+</script>
+
+<h3>Hits per Second</h3>
+<div class="clearfix">
+  <div>
+    <div id="dHitsPerSecond" style="min-height:500px;"></div>
+    <script type="text/javascript">
+    appendOnLoad(function() {
+      graphHitsPerSecond(d3.select('#dHitsPerSecond'), window.ctrl_user_load, window.all_requests)
+    })
+    </script>
+  </div>
+</div>
+
+<script type="text/javascript">
+function graphHitsPerSecond(el, ctrl_user_load, req_data) {
+  var specs = []
+  specs.push(specTimeLine("User Load", "VUs", "blue", ctrl_user_load, d => d.from, d => d.AVG))
+  specs.push(specTimeLine("Request Rate", "hits/s", "purple", req_data, d => d.from, d => d.ELEMENTS_PER_SECOND))
+  specs.push(specTimeLine("Error Rate", "err/s", "red", req_data, d => d.from, d => d.ERRORS_PER_SECOND))
+  specs.push(specTimeLine("Throughput", "Bytes/s", "green", req_data, d => d.from, d => d.THROUGHPUT))
+  plotSVG(el, specs)
+  el.append(() => createSpecsTable(specs.filter(s => s.title==="Request Rate")).node());
+}
+
+</script>
+
+<script type="text/javascript">
+appendOnLoad(function() {
+  d3.selectAll(".expandable").style("display","none");
+})
+</script>
+
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, sans-serif;
+  padding: 2em;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+h1 {
+  margin: 1em auto;
+  text-align: center;
+}
+
+h3 {
+  padding: 0.3em;
+  margin: 1em auto;
+  text-align: center;
+  background-color: #e2e2ff;
+  border-bottom: #444;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+td.graph {
+  padding:0px;
+}
+div.graph {
+  background-color:#eee;
+}
+
+table.legend {
+  margin: 0em auto;
+  text-align: center;
+  width: 75%;
+  border: 1px solid #000;
+}
+table.legend, table.legend > tbody > tr > td {
+  border: 0px;
+  padding:0px;
+}
+
+.logo {
+    width: 300px;
+    height: 74px;
+    background-image: url(data:image/jpeg;base64,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);
+}
+</style>
+  </body>
+</html>

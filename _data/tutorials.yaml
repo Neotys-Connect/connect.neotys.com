@@ -55,3 +55,7 @@ items:
 - title: Easy script maintenance
   category: Testing
   url: https://www.neotys.com/documents/doc/neoload/latest/8051.htm
+
+- title: Advanced Reporting with the NeoLoad CLI
+  category: Reporting
+  url: /tutorials/cli-report
