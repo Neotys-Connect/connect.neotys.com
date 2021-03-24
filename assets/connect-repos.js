@@ -92,7 +92,7 @@ function loadRepoAsync(url, __callback) {
             }).filter(h => h.value != null).forEach(h => {
               resp.headers.append(h.name,h.value);
             });
-            resp.headers.append('date',(new Date()));
+            resp.headers.append('date',(new Date()).toUTCString());
             // console.log(resp)
             cache.put(url, resp)
             __callback(data)
