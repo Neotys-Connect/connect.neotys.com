@@ -32,7 +32,8 @@ These are repos maintained by Neotys dev teams. To learn how this is
 
 </div>
 
-<script async src="/assets/connect-repos.js"></script>
+{% include connect-repos-js.html %}
+
 <script>
 var intReposLoaded = setInterval(function() {
   if(typeof $ != 'undefined') {
@@ -49,7 +50,7 @@ var intReposLoaded = setInterval(function() {
       filter: repo => repo.owner.login == "Neotys-Labs",
       max: 20,
       after: () => {
-        $('<div class="home-column-more" style="text-align:center;"><a href="https://github.com/Neotys-Labs">more</a></div>').insertAfter("#Neotys-Labs-list")
+        $('<div class="home-column-more"><a href="https://github.com/Neotys-Labs">more</a></div>').insertAfter("#Neotys-Labs-list")
       }
     });
   }
