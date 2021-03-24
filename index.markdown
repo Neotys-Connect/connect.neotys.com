@@ -161,7 +161,7 @@ Click here to view the on-demand workshop series!
   </div>
 </div>
 
-<script async src="/assets/connect-repos.js"></script>
+{% include connect-repos-js.html %}
 <script>
 var intIndexLoad = setInterval(function() {
   if(typeof $ != 'undefined' && loadReposList) {
