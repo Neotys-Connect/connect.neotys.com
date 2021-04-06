@@ -28,14 +28,14 @@ Please contact the {% include core-team-link.md %} to receive an invite to our n
 <div class="boxed-outer">
 {% assign sorted_community = site.data.roundtable.members | sort: "name" %}
 {% for member in sorted_community %}
-  <div class="boxed-category" style="text-align:center;">
+  <div class="boxed-category" style="text-align:center;max-width:150px;flow:1">
   {% assign general_link="#" %}
   {% if member.twitter %}{% assign general_link=member.twitter %}{% endif %}
   {% if member.github %}{% assign general_link=member.github %}{% endif %}
   {% if member.website %}{% assign general_link=member.website %}{% endif %}
   <a href="{{ general_link }}">
   <img class="community-person-thumbnail" src="{{ member.image }}" /><br />
-  {{ member.name }}
+  <span style="white-space:normal">{{ member.name }}</span>
   </a>
   <div>
   {% if member.github %}<svg class="svg-icon grey" title="{{ member.name }} on Github" onclick="window.open('{{ member.github }}')" style="cursor:pointer;"><use xlink:href="{{ '/assets/minima-social-icons.svg#github' | relative_url }}"></use></svg>{% endif %}

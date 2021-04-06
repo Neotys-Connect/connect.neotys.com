@@ -3,12 +3,12 @@ meeting_reoccurrence:
   pattern: "second Tuesday of the month"
   time: "10-11am EST"
 next_meeting:
-  date: "Tuesday, March 9, 2021"
+  date: "Tuesday, April 6, 2021"
   agenda: |
-    - Community overview and how to contribute
-    - Is this the best date/time for everyone?
-    - First and immediate contribution target projects
-    - Open discussion: what should we focus on as improvements?
+    - Progress updates on contribution target projects
+    - Follow-up on early feedback and inputs
+    - Contribution social and enablement planning
+    - Open discussion: are our priorities correct?
 members:
 - name: Paul Bruce
   organization: Neotys
@@ -36,3 +36,19 @@ members:
   website: https://knightloader.wordpress.com/
   twitter: https://twitter.com/hrexed
   linkedin: https://www.linkedin.com/in/hrexed/
+- name: Syed Husein
+  organization: Orasi
+  image: https://media-exp1.licdn.com/dms/image/C5603AQGkpmr6ZVprPA/profile-displayphoto-shrink_800_800/0/1516966304066?e=1623283200&v=beta&t=tPeKqliZcQxzt29Exu5CKeNfb5woXBER2eTFrt-9bZQ
+  linkedin: https://www.linkedin.com/in/syed-t-husain/
+- name: Jeff Lupisella
+  organization: Neotys
+  image: https://media-exp1.licdn.com/dms/image/C5103AQG2rPp8Fogekw/profile-displayphoto-shrink_400_400/0/1516237901705?e=1623283200&v=beta&t=OmmcfBQX5eKjq7j8d2e4Zaea1VAeTEoNRPYYgyggPyg
+  linkedin: https://www.linkedin.com/in/jeff-lupisella-b072201/
+- name: Lawrence Nuanez
+  organization: Total Performance Consulting
+  image: https://media-exp1.licdn.com/dms/image/C4E03AQEGdD-lIuwaog/profile-displayphoto-shrink_400_400/0/1517671006677?e=1623283200&v=beta&t=gZFt9fcSOkGFSnclBdY5jffoA_I03m8itGAgqtnXusw
+  linkedin: https://www.linkedin.com/in/lawrencenuanez/
+- name: NaveenKumar Namachivayam
+  organization: Ascendum Solutions
+  image: https://media-exp1.licdn.com/dms/image/C5603AQGCM1tPEF9Lfg/profile-displayphoto-shrink_400_400/0/1536364509209?e=1623283200&v=beta&t=fJmoJzwjZxmUWWeT7zbv21S_d_4ElnyY3RLiolQbx8M
+  linkedin: https://www.linkedin.com/in/naveenkumarn/
