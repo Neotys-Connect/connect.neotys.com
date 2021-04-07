@@ -59,3 +59,7 @@ items:
 - title: Advanced Reporting with the NeoLoad CLI
   category: Reporting
   url: /tutorials/cli-report
+
+- title: Load Distributing and Factors
+  category: Modeling
+  url: /tutorials/load-distributing-and-factors
