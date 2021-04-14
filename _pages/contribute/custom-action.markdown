@@ -17,8 +17,6 @@ examples:
   url: https://github.com/Neotys-Connect/Iso8583
 - title: Database Advanced Actions
   url: https://github.com/Neotys-Labs/Database-Advanced-Actions
-- title: Worksoft Certify
-  url: https://github.com/Neotys-Labs/Worksoft-Certify
 - title: Ranorex
   url: https://github.com/Neotys-Labs/Ranorex
 ---
@@ -32,8 +30,7 @@ Typically, a custom action defines one or more logical blocks that can be placed
  in user paths such as sending custom traffic or otherwise executing custom actions
  as part of a broader workflow. Examples include [running database queries](https://github.com/Neotys-Labs/Database-Advanced-Actions), preparing and streaming real-time test status to other systems (such as
   in many APM integrations with NeoLoad), or kicking off separate processes driven
-  by external tools (such as with [Worksoft Certify](https://github.com/Neotys-Labs/Worksoft-Certify)
-  and [Ranorex](https://github.com/Neotys-Labs/Ranorex) integrations).
+  by external tools (such as with [Ranorex](https://github.com/Neotys-Labs/Ranorex) integrations).
 
 # Getting Started
 
