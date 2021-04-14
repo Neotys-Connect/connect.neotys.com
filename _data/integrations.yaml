@@ -11,10 +11,6 @@ items:
   priority: 1
   url: /tutorials/selenium-and-neoload
 
-- title: Worksoft Certify
-  category: Functional
-  url: https://github.com/Neotys-Labs/Worksoft-Certify
-
 - title: Ranorex
   category: Functional
   url: https://github.com/Neotys-Labs/Ranorex
