@@ -18,23 +18,26 @@ repo:
 toc: |
   - [The Short Version](#the-short-version)
   - [The Complete Walkthrough](#the-complete-walkthrough)
+  - [Who is this for?](#who-is-this-for)
   - [Before you begin](#before-you-begin)
+  - [Prerequisites](#prerequisites)
+  - [Permissions](#permissions)
   - [What is Amazon EKS?](#what-is-amazon-eks)
   - [CLI and Prerequisite Installation](#cli-and-prerequisite-installation)
     * [AWS CLI v2](#aws-cli-v2)
-    * [helm](#helm)
-    * [eksctl and kubectl](#eksctl-and-kubectl)
+    * [install helm](#helm)
+    * [install eksctl and kubectl](#eksctl-and-kubectl)
   - [Neoload Web](#neoload-web)
-  - [Deploy Neoload Web](#deploy-neoload-web)
+  - [Deploying Neoload Web on Kubernetes](#deploying-neoload-web-on-kubernetes)
     * [Create The EKS Cluster](#create-the-eks-cluster)
-    * [Create A MongoDB](#create-a-mongodb)
+    * [Create A MongoDB Cluster](#create-a-mongodb-cluster)
     * [Install The Ingress Controller](#install-the-ingress-controller)
-    * [Install NeoLoad Web](#install-neoload-web)
+    * [Install NeoLoad Web Using Helm](#install-neoload-web-using-helm)
     * [Deploy Helm Chart](#deploy-helm-chart)
       + [Services host configuration](#services-host-configuration)
     * [Routing DNS Requests To Neoload Web](#routing-dns-requests-to-neoload-web)
     * [Verify Neoload Web](#verify-neoload-web)
-  - [Upgrade Neoload Web](#upgrade-neoload-web)
+  - [Upgrading Neoload Web](#upgrading-neoload-web)
 ---
 
 # The Short Version
@@ -43,27 +46,36 @@ See <a href="https://github.com/neotys-connect/neoload_kube/tree/master/aws" tar
 
 # The Complete Walkthrough
 
-The purpose of this document is to describe the steps needed to install Neoload Web as a stand-alone private cloud implementation. This is for Neotys customers who may need to use an on-premise installation, in addition to the publicly available SaaS version provided by Neotys at [https://neoload.saas.neotys.com/](https://neoload.saas.neotys.com/)
+The purpose of this document is to describe the steps needed to install Neoload Web as a stand-alone private cloud implementation. 
+
+# Who is this for?
+
+This document is for Neotys customers who may need to use an on-premise installation, in addition to the publicly available SaaS version provided by Neotys at [https://neoload.saas.neotys.com/](https://neoload.saas.neotys.com/)
 
 These instructions are specific to implementing Neoload Web as a managed Kubernetes cluster using Amazon AWS cloud, and specifically the Elastic Kubernetes Service (EKS) for the deployment.
 
-
 # Before you begin
 
-Neotys is expecting that anyone attempting to set this up already has experience with AWS cloud services, Kubernetes, Docker, YAML, mongodb, and the various CLI’s mentioned in this documentation. Neotys has provided online documentation through their web site and github repositories to help with Neoload specific tasks, but building out the infrastructure and services around the solution are the responsibility of the implementation person. This document is an attempt to help provide further guidance and make the process as easy as possible, but some experience by the user will be necessary to address unknown issues that may arise.
+Neotys is expecting that anyone attempting to set this up already has experience with AWS cloud services, Kubernetes, Docker, YAML, MongoDB, and the various CLI’s mentioned in this documentation. Neotys has provided online documentation through their web site and github repositories to help with Neoload specific tasks, but building out the infrastructure and services around the solution are the responsibility of the implementation person. This document provide more detailed guidance to make the process as easy as possible, but some experience by the user will be necessary to address unknown issues that may arise.
+
+# Prerequisites
 
 You will need the following:
-
-
 
 1. Amazon Account with permissions to do everything in this article
 2. The ability to route DNS records
 3. An understanding of network routing on AWS, including setting up Application Load Balancers
-4. The ability to setup a mongodb database, either as a cloud SaaS version at [https://www.mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas), or a stand alone version on a virtual/physical machine.
-5. For one time setup, there are several programs and command line interface applications (CLI’s) that should be installed on your local machine. You will need permission to install and configure these.
+4. The ability to setup a mongodb database, either as a cloud SaaS version at [https://www.mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas), or a stand alone version on a virtual/physical machine. Note that if you use the Mongodb Atlas service, you will need to use the paid tier to select the currently supported version of 4.0 
+5. There are several programs and command line interface applications (CLI’s) that should be installed on your local machine. You will need install and configure these, and get familiar with their capabilities.
 
-For these examples, we are using the MacOS operating. If you are using another OS such as Windows or Linux, you will need to research the alternative commands and information online.
+For these examples, the MacOS operating is being used. If you are using another OS such as Windows or Linux, you will need to research the alternative commands and information online.
 
+# Permissions
+
+1. Local permissions to install the command line interfaces (CLI) for AWS, eksctl, kubectl, etc. For example, using Brew on MacOS
+2. Permission to execute all required CLI commands. For example, using the AWS CLI to list and create clusters
+3. Permission to create an MongoDB cluster on Atlas. This includes setting the initial user credentials for database access by Neoload Web
+4. Permission to use other services on AWS. This includes EC2, Route 53, configuring VPC's and security groups, opening ports, etc...
 
 # What is Amazon EKS?
 
@@ -73,14 +85,16 @@ Amazon Elastic Kubernetes Service (EKS) is a managed Kubernetes service that mak
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image3.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image9.png "image_tooltip")
 
 
-There is no way we can walk through every aspect of creating and setting up an AWS account. To keep the scope reasonable, we have provided links to the basics that need to be done before moving on.
+Creating and setting up an AWS account is out of scope of this document. The following links provide the basic information needed.
 
 **Set up an AWS account:** [https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/)
 
 **Create SSH keypair: **[https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
+
+We will be deploying Neoload Web on the Elastic Kubernetes Service. Below is a list of common commands that you should be familiar with.
 
 **Elastic Kubernetes Service (EKS) Cheat Sheet:**
 
@@ -89,7 +103,7 @@ There is no way we can walk through every aspect of creating and setting up an A
 
 # CLI and Prerequisite Installation
 
-
+The following installs will allow most of the work to be done as commands in the terminal. We are installing Python, the AWS CLI version 2, helm, eksctl, and kubectl.
 ## AWS CLI v2
 
 Install Python 3.7+, required for AWS CLI v2
@@ -99,7 +113,7 @@ Install Python 3.7+, required for AWS CLI v2
 >> python --version
 
 ```
-Python 3.9.0
+Python 3.9.5
 ```
 
 Install and configure the AWS CLI v2
@@ -113,10 +127,10 @@ Verify you are using the right version:
 >> aws --version
 
 ```
-aws-cli/2.0.59 ...
+aws-cli/2.1.2 Python/3.7.4 Darwin/20.5.0 exe/x86_64
 ```
 
-Log in to your AWS account via:
+Log in to your AWS account via the configure argument:
 
 >> aws configure
 
@@ -146,12 +160,12 @@ aws eks list-clusters
 }
 ```
 
-(You may not have any listed yet.)
+You may not have any listed yet. At this point, we are just making sure there are no security/permission related problems.
 
 AWS CLI cheat sheet: [https://devhints.io/awscli](https://devhints.io/awscli)
 
 
-## helm
+## install helm
 
 [https://helm.sh/docs/intro/install/](https://helm.sh/docs/intro/install/)
 
@@ -162,28 +176,33 @@ brew install helm
 >> helm version
 
 ```
-version.BuildInfo{Version:"v3.4.1", GitCommit:"redacted", GitTreeState:"dirty", GoVersion:"go1.15.4"}
+version.BuildInfo{Version:"v3.6.1", GitCommit:"redacted", GitTreeState:"dirty", GoVersion:"go1.16.5"}
 ```
 
-## eksctl and kubectl
+## install eksctl and kubectl
 
 Install and configure AWS 'eksctl'
 
 [https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
 
+[https://eksctl.io/](https://eksctl.io/)
+
 >> eksctl version
 
 ```
-0.32.0
+0.54.0
 ```
 
 >> kubectl version
 
 ```
-Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.4", GitCommit:"redacted", GitTreeState:"clean", BuildDate:"2020-11-12T01:09:16Z", GoVersion:"go1.15.4", Compiler:"gc", Platform:"darwin/amd64"}
 
-Server Version: version.Info{Major:"1", Minor:"18+", GitVersion:"v1.18.9-eks-d1db3c", GitCommit:"redacted", GitTreeState:"clean", BuildDate:"2020-10-20T22:18:07Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.2", GitCommit:"redacted", GitTreeState:"clean", BuildDate:"2021-06-16T12:52:14Z", GoVersion:"go1.16.5", Compiler:"gc", Platform:"darwin/amd64"}
+
+error: You must be logged in to the server (the server has asked for the client to provide credentials)
 ```
+
+Note: Don't worry about the error. We are only concerned about the Client Version at this point.
 
 >> kubectl config get-contexts
 
@@ -248,7 +267,7 @@ NeoLoad Web is the centralized Performance Testing Platform designed for Continu
 
 [https://www.neotys.com/neoload/features/neoload-web](https://www.neotys.com/neoload/features/neoload-web)
 
-The main thing we want to do is have our own stand-alone installation instead of being restricted to X hours per month for the Neotys SaaS version. We want other team members to be able to watch tests run and share test results. We also want to be able to put ZIP’ed projects and YAML-based tests (like API direct calls) uploaded into Neoload Web for test execution.
+The main thing we want to do is have our own stand-alone installation instead of being restricted to X hours per month for the Neotys SaaS version. We want other team members to be able to watch tests run and share test results. We also want to be able to upload ZIP’ed projects and YAML-based tests (like API direct calls) into Neoload Web for test execution.
 
 **Neoload Official Documentation**
 
@@ -259,9 +278,9 @@ The main thing we want to do is have our own stand-alone installation instead of
 [https://www.neotys.com/documents/doc/nlweb/latest/en/html/#26078.htm](https://www.neotys.com/documents/doc/nlweb/latest/en/html/#26078.htm) - this document describes creating a dockerized installation with a separate Mongodb. We will be doing this with a Helm chart, but the concept and configuration is similar.
 
 
-# Deploy Neoload Web
+# Deploying Neoload Web on Kubernetes
 
-Neoload AWS KUBE deployment documentation:
+Neoload AWS Kubernetes deployment documentation:
 
 [https://github.com/paulsbruce/neoload_kube/blob/master/aws/nlw_deploy_eks.md](https://github.com/paulsbruce/neoload_kube/blob/master/aws/nlw_deploy_eks.md)
 
@@ -269,12 +288,12 @@ This is what we are trying to build:
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image5.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image14.png "image_tooltip")
 
 
 This diagram shows that we will be accessing a custom domain for Neoload Web, and these requests will be routed to the Neoload Web Cluster (NLW Cluster above). This will access the front end (FE) web server which is the web UI for Neoload Web. The back end (BE) is the programming logic that communicates to the back end Mongo database - which we are creating as a Mongo Atlas database in the cloud from Mongo (this is an additional service set up outside of AWS, but the actual database runs on AWS infrastructure). Both the FE and BE are running as docker containers in the EKS cluster.
 
-The Load Cluster listed in the diagram is a separate EKS cluster that will hold all of the Controller and Load Generator machines. Setting up this cluster is outside of the scope of this document, but the purpose of the cluster is to be a place for all of the Neoload lab infrastructure to be accessible on demand as needed (when tests are executed). This cluster could be replaced with Dockerized containers running inside of a virtual machine, a generator (non-docker) installed on virtual machines, or generator (non-docker) installed directly on physical machines. Any of this can connect to the Neoload Web Cluster. If you are interested in setting up a second cluster for dynamic infrastructure on AWS using the Fargate service, see this URL:
+The Load Cluster listed in the diagram is a separate EKS cluster that will hold all Controllers and Load Generators. Setting up this cluster is outside of the scope of this document, but the purpose of the cluster is to be a place for all of the Neoload lab infrastructure to be accessible on demand as needed (when tests are executed). This cluster could be replaced with Dockerized containers running inside of a virtual machine, a generator (non-docker) installed on virtual machines, or generator (non-docker) installed directly on physical machines. Any of these can connect to the Neoload Web Cluster. If you are interested in setting up a second cluster for dynamic infrastructure on AWS using the Fargate service, see this URL:
 
 [https://github.com/paulsbruce/neoload_kube/tree/master/aws](https://github.com/paulsbruce/neoload_kube/tree/master/aws)
 
@@ -283,11 +302,11 @@ Note that the dynamic infrastructure features require an Enterprise license of N
 
 ## Create The EKS Cluster
 
-We could set the cluster using the AWS web site. However, this UI is always changing over time, and the instructions have to be maintained. Using a CLI allows for many tasks to be completed for setup and configuration with a few commands.
+We could set the cluster using the AWS web site. However, this UI is always changing over time, and the instructions have to be maintained. Using a CLI allows for many tasks to be completed for setup and configuration with a few commands. We will use a combination of eksctl and kubectl to get most of the heavy lifting done.
 
-You have to create a node group with at least one node. We want to size the node so that it matches the Neoload documentation for hardware specifications. I suggest md5.xlarge. We will create this on us-east-2, but you may want to create this on the same region as the application under test.
+You first have to create a node group with at least one node using eksctl. We want to size the node so that it matches the Neoload documentation for hardware specifications. I suggest md5.xlarge. We will create this on us-east-2, but you may want to create this on the same region as the application under test.
 
-Instead of just using command line arguments, we will use a YAML file to define the arguments and make it easier to execute. We will use a custom YAML file to create the Neoload Web Cluster. Here is an example:
+Instead of just using eksctl command line arguments, we will use a YAML file to define the arguments and make it easier to execute. We will use a custom YAML file to create the Neoload Web Cluster. Here is an example:
 
 
 ```
@@ -314,11 +333,11 @@ nodeGroups:
 
 This example specifically uses a 172.16/12 CIDR that is compatible with Mongo Atlas. [https://docs.atlas.mongodb.com/security-vpc-peering/](https://docs.atlas.mongodb.com/security-vpc-peering/) - see the section labeled “VPC CIDR”.
 
+Note: CIDR (Classless Inter-Domain Routing) is a method for allocating IP addresses and for IP routing, also called "supernetting" because it replaces earlier methods that used "classes" of networks (A, B, C).
+
 The AWS VPC CIDR block or subset cannot overlap with your Atlas CIDR Block or any other Network Peering connection VPC CIDR.
 
 The CIDR block must be in one of the following private networks:
-
-
 
 *   **10.0.0.0 - 10.255.255.255** (10/8 prefix)
 *   **172.16.0.0 - 172.31.255.255** (172.16/12 prefix)
@@ -373,7 +392,7 @@ We can check within AWS EKS and see if we have a new cluster:
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image6.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image19.png "image_tooltip")
 
 
 nlw matches the name we gave to the cluster in the YAML file.
@@ -382,7 +401,7 @@ Let’s check to see if it has a node group:
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image7.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image20.png "image_tooltip")
 
 
 Check the see if the cluster is working from the command line using kubectl:
@@ -401,13 +420,13 @@ By looking at the EC2 dashboard, you can see the mx5.xlarge EC2 instance created
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image8.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image25.png "image_tooltip")
 
 
 Now that we have a cluster, we need a back end database so that we can set up Neoload Web to store all the data. Keep in mind that even if you have to take down the FE and BE, or even start them back up from scratch, all the data is in the database, so you won’t lose anything.
 
 
-## Create A MongoDB
+## Create A MongoDB Cluster
 
 We need a Mongo Database for the Neoload Web Back End (BE) to use. We will use Mongodb Atlas to do this. MongoDB Atlas is a global cloud database service fully managed MongoDB across AWS, Google Cloud, and Azure. This gives us the ability to deploy, run, and scale MongoDB in the cloud. For more information, see [https://www.mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
 
@@ -415,33 +434,30 @@ Ensure to follow good security practices and set up appropriate user access. Do 
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image9.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image13.png "image_tooltip")
 
 
 Set up a dedicated cluster, not a shared cluster. Ensure the version is 4.0 and no later.
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image10.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image1.png "image_tooltip")
 
 
-If you click the “connect” button, you will see the various ways that can be used to connect. Look at the string and use this as the information for the mongo host name in the section titled, “Deploy Helm File”.
+If you click the “connect” button, you will see the various ways that can be used to connect. 
 
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image28.png "image_tooltip")
 
+Look at the string and use this as the information for the mongo host name in the section titled, “Deploy Helm File”.
 
 ![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image11.png "image_tooltip")
-
-
-
-
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image12.png "image_tooltip")
 
 
 Choose “Connect Your Application” and select JAVA 3.4 or later
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image13.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image17.png "image_tooltip")
 
 
 The string below has the information we need for the mongodb hostname:
@@ -452,13 +468,13 @@ Note that we are referencing each shard with a port, and the database name (we c
 
 We set up a user id and password for accessing the database.
 
-[Image]
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image26.png "image_tooltip")
 
 We added a user called neoloadweb and set a password. We will use this information in our YAML file when we run the command in the section “Deploy the Helm chart”.
 
 We will want to whitelist only the IP address(es) needed for connections to the database, and deny all others. The easiest way to find the IP the EKS cluster will use for external outbound traffic is to look at the Elastic IP menu on AWS:
 
-[Image]
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image5.png "image_tooltip")
 
 This IP address is automatically assigned to the cluster during creation unless you specify that it not be public and private only.
 
@@ -466,7 +482,7 @@ In Mongo Atlas, we set a whitelist filter with this IP address:
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image16.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image22.png "image_tooltip")
 
 
 
@@ -500,9 +516,7 @@ To verify what IP is being used by the ingress controller, You can remote into t
 This would tell you that IP 3.139.107.100 is the one being used to the outside world, and should match the one listed in Elastic IP’s for that cluster.
 
 
-## Install NeoLoad Web
-
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image14.png "image_tooltip")
+## Install NeoLoad Web Using Helm
 
 ![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image15.png "image_tooltip")
 
@@ -724,7 +738,6 @@ Use the same commands as with the **vi** editor in UNIX systems to get around an
 **Note:** _This value needs to be updated in this case because of the value NOT updating properly when deployed. This issue may be fixed in future releases. If the value is already zero, no changes are needed._
 
 
-
 ![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image17.png "image_tooltip")
 
 
@@ -757,10 +770,7 @@ The **kube-system** namespace contains the following pods:
 
 The EKS cluster has a Load Balancer in AWS. This was created during EKS cluster creation. kubectl interacts with the EKS ALB for the cluster commands which we execute in the command line. See the section titled “Install The Ingress Controller” for more information.
 
-
-
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image18.png "image_tooltip")
-
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image7.png "image_tooltip")
 
 Note that we have a DNS name for the load balancer of
 
@@ -770,7 +780,7 @@ However, if we try to go there directly in the browser, we will not get to the N
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image19.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image18.png "image_tooltip")
 
 
 Why? Because the ingress controller will only route requests to those host names.
@@ -839,20 +849,20 @@ This could also be handled by other services like Godaddy, Cloudflare, or other 
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image20.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image24.png "image_tooltip")
 
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image21.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image23.png "image_tooltip")
 
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image22.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image2.png "image_tooltip")
 
 
-This screenshot shows neoload-web-files, and just needs to be repeated for the other two host names of neoload-web and neoload-web-api. They all point to the same DNS name listed in the AWS load balancer.
+This screenshot shows the entry for neoload-web-files. This needs to be repeated for the other two host names (neoload-web and neoload-web-api). They all point to the same DNS name listed in the AWS load balancer.
 
 
 ## Verify Neoload Web
@@ -865,7 +875,7 @@ You should see the main login window for Neoload Web. This indicates the routing
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image23.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image8.png "image_tooltip")
 ** \
 **From here, you can follow the online documentation for Neoload Web:
 
@@ -876,7 +886,7 @@ When connecting the Neoload GUI to the Neoload Web server, be aware that all of 
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image24.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image6.png "image_tooltip")
 
 
 This is a change to the default URL connection input in the Neoload GUI. The same concept applies to the neoload-web-files URL.
@@ -895,8 +905,19 @@ generator99 = 7199
 
 Note that you should not need to add additional ports to be open at the AWS Security Group level.
 
+# Upgrading Neoload Web
 
-# Upgrade Neoload Web
+For long-term support of this cluster, you will need to arrange to store, maintain, and protect the data stored as part of NeoLoad Web.
+
+Backup and Recovery Strategy
+
+THIS SECTION TO BE UPDATED IN A FUTURE UPDATE
+
+Data Retention Policies and Processes
+
+THIS SECTION TO BE UPDATED IN A FUTURE UPDATE
+
+# Upgrading Neoload Web
 
 Periodically, the Neoload Web software will be updated by Neotys. The Helm chart used in these examples produces a deployment that has container specs which include ‘imagePullPolicy: Always’.
 
@@ -1006,7 +1027,7 @@ This will do a “rolling restart” of the neoload web deployment and cause kub
 
 
 
-![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image25.png "image_tooltip")
+![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image27.png "image_tooltip")
 
 
 OR using the kubectl command to look for the version of the current pods.
