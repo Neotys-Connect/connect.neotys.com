@@ -180,6 +180,11 @@ layout: default
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
 <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
   <script>
+    window.addEventListener("hashchange", function(e) {
+      if(location.hash === "#feedback")
+        $("#formbutton-button").click()
+    }, false);
+
     function feedbackSubmit(data,setStatus) {
       gtag('event', 'submit', {'event_category' : 'feedback', 'event_label' : document.title});
       return data;
@@ -269,6 +274,10 @@ layout: default
   function getCommentsUrl() {
     return {% if page_uuid %}"{{ site.url }}{{ page_uuid }}"{% else %}document.location+""{% endif %}
   }
+  window.addEventListener("hashchange", function(e) {
+    if(location.hash === "#comment")
+      setCommentDetailVisibility(true)
+  }, false);
   var manualCommentsOrigin = null;
   function setCommentDetailVisibility(show,origin) {
     if(origin != undefined && manualCommentsOrigin == null) {
