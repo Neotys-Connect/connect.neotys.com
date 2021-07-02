@@ -5,40 +5,41 @@ category: Deployment
 permalink: /tutorials/deploying-neoload-web-in-aws
 support: Community
 videos:
-- https://www.youtube.com/embed/Ui9LFbKX5zU
+  - https://www.youtube.com/embed/Ui9LFbKX5zU
 contributors:
-- text: QA Consultants
+  - text: QA Consultants
 url: https://qaconsultants.com/
-- text: Scott Moore
+  - text: Scott Moore
 url: http://scottmoore.consulting
-- text: Paul Bruce
+  - text: Paul Bruce
 url: https://github.com/paulsbruce
 repo:
-- https://github.com/neotys-connect/neoload_kube/tree/master/aws
+  - https://github.com/neotys-connect/neoload_kube/tree/master/aws
+
 toc: |
-- [The Short Version](#the-short-version)
-- [The Complete Walkthrough](#the-complete-walkthrough)
-- [Who is this for?](#who-is-this-for)
-- [Before you begin](#before-you-begin)
-- [Prerequisites](#prerequisites)
-- [Permissions](#permissions)
-- [What is Amazon EKS?](#what-is-amazon-eks)
-- [CLI and Prerequisite Installation](#cli-and-prerequisite-installation)
-  - [AWS CLI v2](#aws-cli-v2)
-  - [install helm](#install-helm)
-  - [install eksctl and kubectl](#install-eksctl-and-kubectl)
-- [Neoload Web](#neoload-web)
-- [Deploying Neoload Web on Kubernetes](#deploying-neoload-web-on-kubernetes)
-  - [Create The EKS Cluster](#create-the-eks-cluster)
-  - [Create A MongoDB Cluster](#create-a-mongodb-cluster)
-  - [Install The Ingress Controller](#install-the-ingress-controller)
-  - [Install NeoLoad Web Using Helm](#install-neoload-web-using-helm)
-  - [Deploy Helm Chart](#deploy-helm-chart)
-    - [Services host configuration](#services-host-configuration)
-  - [Routing DNS Requests To Neoload Web](#routing-dns-requests-to-neoload-web)
-  - [Verify Neoload Web](#verify-neoload-web)
-- [Post-deployment Considerations](#post-deployment-considerations)
-- [Upgrading Neoload Web](#upgrading-neoload-web)
+  - [The Short Version](#the-short-version)
+  - [The Complete Walkthrough](#the-complete-walkthrough)
+  - [Who is this for?](#who-is-this-for)
+  - [Before you begin](#before-you-begin)
+  - [Prerequisites](#prerequisites)
+  - [Permissions](#permissions)
+  - [What is Amazon EKS?](#what-is-amazon-eks)
+  - [CLI and Prerequisite Installation](#cli-and-prerequisite-installation)
+    * [AWS CLI v2](#aws-cli-v2)
+    * [install helm](#helm)
+    * [install eksctl and kubectl](#eksctl-and-kubectl)
+  - [Neoload Web](#neoload-web)
+  - [Deploying Neoload Web on Kubernetes](#deploying-neoload-web-on-kubernetes)
+    * [Create The EKS Cluster](#create-the-eks-cluster)
+    * [Create A MongoDB Cluster](#create-a-mongodb-cluster)
+    * [Install The Ingress Controller](#install-the-ingress-controller)
+    * [Install NeoLoad Web Using Helm](#install-neoload-web-using-helm)
+    * [Deploy Helm Chart](#deploy-helm-chart)
+      + [Services host configuration](#services-host-configuration)
+    * [Routing DNS Requests To Neoload Web](#routing-dns-requests-to-neoload-web)
+    * [Verify Neoload Web](#verify-neoload-web)
+  - [Post-deployment Considerations](#post-deployment-considerations)
+  - [Upgrading Neoload Web](#upgrading-neoload-web)
 ---
 
 # The Short Version
@@ -250,16 +251,12 @@ This guide makes a best effort to provide the main commands to accomplish the ta
 
 NeoLoad Web is the centralized Performance Testing Platform designed for Continuous Testing. You can do the following:
 
-
-
 * Launch performance tests
 * Select your load generation infrastructure
 * Analyse test results in real time or for terminated tests
 * Customize dashboards, based on custom graphs
 * Share performance test results with Dev, QA, Ops
 * Connect performance testing data: import and correlate third party data / export NeoLoad test data
-
-
 
 ![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image4.png "image_tooltip")
 
@@ -287,8 +284,6 @@ Neoload AWS Kubernetes deployment documentation:
 
 This is what we are trying to build:
 
-
-
 ![alt_text](/_pages/tutorials/deploying-neoload-web-in-aws/images/image14.png "image_tooltip")
 
 
@@ -299,7 +294,6 @@ The Load Cluster listed in the diagram is a separate EKS cluster that will hold 
 [https://github.com/paulsbruce/neoload_kube/tree/master/aws](https://github.com/paulsbruce/neoload_kube/tree/master/aws)
 
 Note that the dynamic infrastructure features require an Enterprise license of Neoload.
-
 
 ## Create The EKS Cluster
 
@@ -667,9 +661,6 @@ mongodb:
  mongodbUsername: neoloadweb
  mongodbPassword: <secret>
 ```
-
-
-
 
 We are using the information from the Mongo Atlas configuration section to put in the proper values into the mongo section of the YAML file:
 
