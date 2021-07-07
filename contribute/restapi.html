@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for connect.neotys.com" href="/feed.xml" /><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Creating a REST API Integration | Neotys Connect</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Creating a REST API Integration" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Community-driven tutorials, learning resources, and collaborations." />
+<meta property="og:description" content="Community-driven tutorials, learning resources, and collaborations." />
+<link rel="canonical" href="https://connect.neotys.com/contribute/restapi" />
+<meta property="og:url" content="https://connect.neotys.com/contribute/restapi" />
+<meta property="og:site_name" content="Neotys Connect" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Creating a REST API Integration" />
+<script type="application/ld+json">
+{"description":"Community-driven tutorials, learning resources, and collaborations.","url":"https://connect.neotys.com/contribute/restapi","@type":"WebPage","headline":"Creating a REST API Integration","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://connect.neotys.com/feed.xml" title="Neotys Connect" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-WZ89N6ZSFK"></script>
+<script>
+  window['ga-disable-G-WZ89N6ZSFK'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WZ89N6ZSFK');
+</script>
+
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><div style="display:flex;align-items:flex-end;float:left;">
+      <a class="site-title" style="padding-right:0.8em;white-space: nowrap;" rel="author" href="/">Neotys Connect</a>
+      <span class="site-description">Community-driven tutorials, learning resources, and collaborations.</span>
+    </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Connect</a><a class="page-link" href="/other-neotys-sites">Other Neotys Sites</a></div>
+      </nav></div>
+</header>
+<div>
+        <div class="wrapper"><div id="breadcrumbs">
+
+<a href="/">Home</a>
+
+  
+    / <a href="/contribute/">Contribute</a>
+  
+
+  
+    / <span>Creating a REST API Integration</span>
+  
+
+</div>
+</div>
+      </div><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+
+<article class="post">
+  <header class="post-header">
+    <h1 class="post-title">Creating a REST API Integration</h1>
+  </header>
+<div class="article-container">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="article-content-with-sidebar">
+
+
+
+<h1 id="what-is-a-neoload-rest-api-integration">What Is a NeoLoad REST API Integration</h1>
+
+<p>At the heart of the NeoLoad Web Platform are the <a href="https://neoload-rest.saas.neotys.com/explore/">NeoLoad Web REST APIs</a>. These set of endpoints provide programmatic access to various functions of the testing
+ platform, such as:</p>
+
+<ul>
+  <li>Workspace Management</li>
+  <li>Runtime (managing and running tests)</li>
+  <li>Results (exporting data and updating certain data points)</li>
+  <li>Resources (zones, reservations, etc.)</li>
+  <li>User Administration</li>
+</ul>
+
+<h1 id="why-create-a-rest-api-integration">Why Create a REST API Integration?</h1>
+
+<p>Because these are standardized, documented HTTP/REST API calls, you can create a
+ whole host of unique integrations and usage scenarios, often of which are things
+ like:</p>
+
+<ul>
+  <li>Automated setup of workspaces per team/group in your organization</li>
+  <li>Reflecting project metadata for use in external systems’ pick-lists and selection UIs</li>
+  <li>Update test settings metadata with hashtag labels and other complimentary info</li>
+  <li>Aggregate over test data for specific custom exports to other systems</li>
+  <li>Create HTML dashboards unique to your analysis models based on test result data</li>
+  <li>Check for and report on zone usage (queue until resources to become available)</li>
+  <li>Remove users that are deactivated in an external authentication system</li>
+</ul>
+
+<h1 id="examples">Examples</h1>
+
+<p>As we work with partners and customers to contribute their own examples, you will
+ find that this list will grow quickly!</p>
+
+<div class="boxed-outer">
+
+
+  <div class="boxed-category">
+    
+
+
+
+
+<a href="https://github.com/Neotys-Labs/neoload-cli" title="NeoLoad CLI" target="_blank">NeoLoad CLI</a>
+
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+  </div>
+  <div class="article-sidebar">
+
+
+
+
+
+  <div class="sidebar-section">
+  <h3>Product Docs</h3>
+  <ul>
+  
+    
+    
+    
+    <li><a href="https://www.neotys.com/documents/doc/nlweb/latest/en/html/25057.htm" target="_blank">Product Docs</a></li>
+  
+    
+    
+    
+    <li><a href="https://neoload-rest.saas.neotys.com/explore/" target="_blank">NeoLoad Web REST APIs</a></li>
+  
+  </ul>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="sidebar-section sidebar-comments" style="display:none">
+  <a href="#comments" onclick="scrollToCommentsDetail()">
+  <h3>Comments</h3>
+  <span id="comment-count" class="disqus-comment-count" data-disqus-identifier="/contribute/restapi" data-disqus-url="https://connect.neotys.com/contribute/restapi">Count</span>
+  </a>
+</div>
+
+
+
+
+
+  <div class="sidebar-section">
+    <h3>Examples</h3>
+    <ul>
+    
+      <li>
+
+
+
+
+<a href="https://github.com/Neotys-Labs/neoload-cli" title="NeoLoad CLI" target="_blank">NeoLoad CLI</a>
+</li>
+    
+    </ul>
+  </div>
+
+
+
+  </div>
+
+
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
+<script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+  <script>
+    window.addEventListener("hashchange", function(e) {
+      if(location.hash === "#feedback")
+        $("#formbutton-button").click()
+    }, false);
+
+    function feedbackSubmit(data,setStatus) {
+      gtag('event', 'submit', {'event_category' : 'feedback', 'event_label' : document.title});
+      return data;
+    }
+    function feedbackOnResponse(ok, setStatus) {
+      if(ok) {
+        setTimeout(function() {
+          $("#formbutton-iframe").hide()
+        },4000)
+      }
+    }
+    window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+    formbutton("create", {
+        action: "https://formspree.io/f/xleovqka",
+        onSubmit: feedbackSubmit,
+        onResponse: feedbackOnResponse,
+        title: "This page:",
+        buttonImg: "<i class='fas fa-comment' style='font-size:24px'/>",
+        fields: [{
+          name: "helped",
+          type: "radio",
+          value: "yes",
+          label: "Helped me",
+          required: true,
+        },
+        {
+          name: "helped",
+          type: "radio",
+          value: "no",
+          label: "Did not help",
+          required: true
+        },
+        {
+          name: "comment",
+          label: "Anything you'd like to share?",
+          type: "textarea",
+          placeholder: "Tell us in your own words"
+        },
+        {
+          name: "source",
+          label: "Page/Topic",
+          type: "text",
+          readonly: true,
+          style: {
+            label: {
+              width: "1%"
+            }
+          },
+          value: ("" + document.location),
+        },
+        {
+          type: "submit"
+        }],
+        // ...
+      });
+
+  </script>
+
+  
+  <div style="clear:both;"></div>
+
+  <div id="comments" class="comments-outer" style="max-width:600px;">
+    <a href="#comments" name="comments"></a>
+    <div class="comments-none"><a href="#comments-bottom" onclick="setCommentDetailVisibility(true,this)">Add a comment</a></div>
+    <div id="disqus_thread" class="comments-detail" style="display:none;"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+        var disqus_config = function () {
+          this.page.url = getCommentsUrl();
+          this.page.identifier = "/contribute/restapi";
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://neotys-connect.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+
+  <script>
+  function getCommentsUrl() {
+    return "https://connect.neotys.com/contribute/restapi"
+  }
+  window.addEventListener("hashchange", function(e) {
+    if(location.hash === "#comment")
+      setCommentDetailVisibility(true)
+  }, false);
+  var manualCommentsOrigin = null;
+  function setCommentDetailVisibility(show,origin) {
+    if(origin != undefined && manualCommentsOrigin == null) {
+      manualCommentsOrigin = origin;
+      gtag('event', 'click add', {'event_category' : 'discussion', 'event_label' : document.title});
+    }
+    var detail = $(".comments-detail")
+    if(show) {
+      $(".comments-none").hide();
+      detail.show()
+      $(".comments-outer").addClass("comments-outer-detailed")
+      scrollToCommentsDetail()
+    }
+    else {
+      $(".comments-none").show();
+      detail.hide()
+      $(".comments-outer").removeClass("comments-outer-detailed")
+    }
+  }
+  function scrollToCommentsDetail() {
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $(".comments-detail").offset().top
+    }, 300);
+  }
+  var intComments = setInterval(function() {
+    if(typeof $ != 'undefined' && typeof DISQUSWIDGETS != 'undefined') {
+      var count = document.getElementById("comment-count");
+      count = $(count)
+      DISQUSWIDGETS.getCount({reset: true});
+      var text = count.text()
+      var num = text.split(" ")[0];
+      num = !(num.trim().length > 0 && !isNaN(parseInt(num))) ? 0 : parseInt(num);
+      if(num > 0) {
+        setCommentDetailVisibility(true)
+        $(".sidebar-comments").show()
+      }
+      clearInterval(intComments)
+    }
+  },100)
+  </script>
+  <script id="dsq-count-scr" src="//neotys-connect.disqus.com/count.js" async></script>
+
+  
+
+</article>
+
+      </div>
+      <div class="back-to-top-wrapper">
+        <a href="#top" class="back-to-top-link" aria-label="Scroll to Top">🔝</a>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p>
+          <a href="https://github.com/Neotys-Connect/connect.neotys.com/commits/main/_pages/contribute/restapi.markdown" class="page-history">Page History in Git</a>
+        </p>
+      </div>
+      <div class="footer-col">
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+<!-- env: production -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(function () {   //  <- jquery is not yet initialized
+        updateOffsiteLinksToOpenInBlank()
+        updateArticleFrameSizes()
+      });
+      function updateOffsiteLinksToOpenInBlank() {
+        var host = document.location.hostname
+        var els = $("a:not(:target)").each(function(i,o) {
+          var href = (o.href+"").trim()
+          if(href.length > 0
+              && (
+                  ((href.indexOf('://'+host)<1) && $(o).attr('use-same-tab') != "true")
+                  || $(o).attr('use-same-tab') == "false"
+              )
+            ) {
+            if($(o).attr('is-external-link') != "true") {
+              $(o).attr('is-external-link','true')
+              $(o).attr('target','_blank')
+              if($(o).attr('show-external-link') != "false") {
+                var span = $('<span class="external-link-icon"></span>')
+                span.click(function() { $(o).click() })
+                span.insertAfter(o)
+              }
+            }
+          }
+        });
+        //alert(els.length);
+      }
+      function updateArticleFrameSizes() {
+        var els = $("iframe").each(function(i,o) {
+          var el = $(o)
+          var aspectratio = parseFloat(el.attr("aspectratio"));
+          if(isNaN(aspectratio)) {
+            aspectratio = el.height() / el.width();
+            el.attr("aspectratio",aspectratio)
+
+            var wrapper = $('<div class="iframe-wrapper">')
+            wrapper.css({
+              'max-width':''+el.parent().width()+"px",
+              'max-height':''+(el.parent().width()*aspectratio)+"px",
+              'width':'100vw',
+              'height':(100*aspectratio)+'vw',
+              'margin':'0 auto 1em auto'
+            })
+            el.wrap(wrapper).removeAttr("width").removeAttr("height").css({
+              'width':'100%',
+              'height':'100%'
+            })
+          }
+        });
+      }
+    </script>
+
+  </body>
+
+</html>

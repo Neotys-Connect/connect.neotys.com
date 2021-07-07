@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for connect.neotys.com" href="/feed.xml" /><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>NeoLoad as-code | Neotys Connect</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="NeoLoad as-code" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Community-driven tutorials, learning resources, and collaborations." />
+<meta property="og:description" content="Community-driven tutorials, learning resources, and collaborations." />
+<link rel="canonical" href="https://connect.neotys.com/tutorials/neoload-as-code" />
+<meta property="og:url" content="https://connect.neotys.com/tutorials/neoload-as-code" />
+<meta property="og:site_name" content="Neotys Connect" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="NeoLoad as-code" />
+<script type="application/ld+json">
+{"description":"Community-driven tutorials, learning resources, and collaborations.","url":"https://connect.neotys.com/tutorials/neoload-as-code","@type":"WebPage","headline":"NeoLoad as-code","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://connect.neotys.com/feed.xml" title="Neotys Connect" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-WZ89N6ZSFK"></script>
+<script>
+  window['ga-disable-G-WZ89N6ZSFK'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WZ89N6ZSFK');
+</script>
+
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><div style="display:flex;align-items:flex-end;float:left;">
+      <a class="site-title" style="padding-right:0.8em;white-space: nowrap;" rel="author" href="/">Neotys Connect</a>
+      <span class="site-description">Community-driven tutorials, learning resources, and collaborations.</span>
+    </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Connect</a><a class="page-link" href="/other-neotys-sites">Other Neotys Sites</a></div>
+      </nav></div>
+</header>
+<div>
+        <div class="wrapper"><div id="breadcrumbs">
+
+<a href="/">Home</a>
+
+  
+    / <a href="/tutorials/">Tutorials</a>
+  
+
+  
+    / <span>NeoLoad as-code</span>
+  
+
+</div>
+</div>
+      </div><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+
+<article class="post">
+  <header class="post-header">
+    <h1 class="post-title">NeoLoad as-code</h1>
+  </header>
+<div class="article-container">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="article-content-with-sidebar">
+
+
+
+<p>NeoLoad as-code is a Domain-specific Language (DSL) for YAML and JSON to describe
+ load testing scripts (NeoLoad User Paths), variables, and other test execution settings.</p>
+
+<p>These as-code files can be:</p>
+
+<ul>
+  <li>checked in to source code, just like any other automation artifacts</li>
+  <li>refactored / reused so that SCM changes are versionable/testable/traceable</li>
+  <li>run in tandem with classic NeoLoad Desktop Designer (.nlp) projects</li>
+  <li>dynamically written during pipeline execution</li>
+</ul>
+
+<h1 id="why-neoload-as-code">Why NeoLoad as-code</h1>
+
+<p>Some people just like to work in code. Many developers and automation engineers
+ live in their IDE or editor of choice and why should load testing be any different?</p>
+
+<p>Much of the early surface area for modern development is around APIs, and therefore
+ API testing is a huge part of modern software delivery cycles and validating
+ their performance shouldn’t be hard.</p>
+
+<p>Using NeoLoad as-code and the NeoLoad CLI
+ connects this type of early work into the rest of the performance and load testing
+ capabilities that the NeoLoad Platform has to offer. Starting with NeoLoad as-code for API testing also:</p>
+
+<ul>
+  <li>encourages earlier discussions about SLAs, environments, and test data</li>
+  <li>eases transition of test assets from early dev/test checks to downstream activities</li>
+  <li>fits in perfectly with highly automated processes such as CI pipelines</li>
+  <li>provides traceability and proof of performance requirements fulfillment</li>
+  <li>enables templating and standardization of process for performance testing</li>
+</ul>
+
+<h1 id="examples">Examples</h1>
+
+<p>There are a ton of <a href="https://github.com/Neotys-Connect/neoload-as-code">examples from our training workshops in the ‘neoload-as-code’ repo</a>, but below is the general gist of how writing as-code YAML DSL flows.</p>
+
+<p><img src="/_pages/tutorials/neoload-as-code/images/as-code-typing.gif" alt="Write and edit load tests confidently" /></p>
+
+<p><img src="/_pages/tutorials/neoload-as-code/images/example-module1.png" alt="Example as-code YAML DSL from training module 1" /></p>
+
+<h1 id="training--workshops">Training / Workshops</h1>
+
+<p>The video and deck used for our public training workshop on 2021-03-04 are below:</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VJ0ouJSSDr4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E/embed?start=true&amp;loop=true&amp;delayms=10000" frameborder="0" width="480" height="299" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+<h1 id="getting-started">Getting Started</h1>
+
+<p>To write NeoLoad as-code YAML DSL, you will need:</p>
+
+<ol>
+  <li>
+    <p>A modern IDE or text editor of your choice</p>
+
+    <p>NOTE: Preferably something that supports JSON Schema for YAML such as:</p>
+    <ul>
+      <li><a href="https://code.visualstudio.com/download">VS Code</a> (also see schema support below)</li>
+      <li><a href="https://www.jetbrains.com/idea/download/">IntelliJ Community Edition</a> (also see schema support below)
+.</li>
+    </ul>
+  </li>
+  <li>
+    <p>The NeoLoad CLI</p>
+
+    <p>TO INSTALL follow these steps which require:</p>
+    <ul>
+      <li><a href="https://www.python.org/downloads/">Python 3.6 or higher</a></li>
+      <li>Access to <a href="https://pypi.org/project/neoload/">Pypi.org</a></li>
+      <li>in a command/terminal window, type ‘pip3 install neoload’</li>
+    </ul>
+  </li>
+</ol>
+
+<h1 id="dsl-schema-support">DSL Schema Support</h1>
+
+<p>To have YAML and as-code DSL specific text validation as well as autocomplete
+ features, you will need to have the YAML extension installed and configure.</p>
+
+<p>JSON Schema to use: <a href="https://raw.githubusercontent.com/Neotys-Labs/neoload-models/v3/neoload-project/src/main/resources/as-code.latest.schema.json">https://raw.githubusercontent.com/Neotys-Labs/neoload-models/v3/neoload-project/src/main/resources/as-code.latest.schema.json</a></p>
+
+<p>File patterns to use:</p>
+<ul>
+  <li><em>*/</em>.nl.yaml</li>
+  <li>**/default.yaml</li>
+</ul>
+
+<p>You may also want to run NeoLoad CLI to validate your file as well when you save.</p>
+
+<ul>
+  <li>An example of this in VS Code is to install the <a href="https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave">‘Run on Save’</a> extension and configure it in your settings.json file.</li>
+</ul>
+
+<h2 id="vs-code-configuration">VS Code Configuration</h2>
+
+<p>File -&gt; Preferences -&gt; Settings -&gt; Extensions -&gt; Scroll down and find “Edit in settings.json”</p>
+
+<p>Or in these paths in your OS:</p>
+
+<ul>
+  <li>Windows %APPDATA%\Code\User\settings.json</li>
+  <li>macOS $HOME/Library/Application Support/Code/User/settings.json</li>
+  <li>Linux $HOME/.config/Code/User/settings.json</li>
+</ul>
+
+<p><a href="https://raw.githubusercontent.com/Neotys-Connect/neoload-as-code/master/training/resources/vscode.settings.json">A reference example settings.json file can be found here.</a></p>
+
+<p><img src="/_pages/tutorials/neoload-as-code/images/vscode-schema-settings.png" alt="VS Code JSON Schema Configuration for as-code" /></p>
+
+<h2 id="intellij-configuration">IntelliJ Configuration</h2>
+
+<p>Preferences &gt; Languages &amp; Frameworks &gt; Schemas and DTDs &gt; JSON Schema Mappings</p>
+
+<p><img src="/_pages/tutorials/neoload-as-code/images/intellij-schema-settings.png" alt="IntelliJ JSON Schema Configuration for as-code" /></p>
+
+<h1 id="additional-ci-and-cli-workshops">Additional CI and CLI workshops</h1>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=mqPIaYeRSmQ">NeoLoad in Jenkins and CI 101</a></li>
+  <li><a href="https://www.youtube.com/watch?v=ixTk9Vu9NKw">NeoLoad in Jenkins and CI 201</a></li>
+  <li><a href="https://www.youtube.com/watch?v=13QFi5Rzi6s">NeoLoad in Jenkins and CI 301</a></li>
+</ul>
+
+
+
+
+
+
+  </div>
+  <div class="article-sidebar">
+
+
+
+  <div class="sidebar-section">
+  <h3>Contributors</h3>
+  <ul>
+  <li>
+
+
+
+
+<a href="https://neotys.com" title="Neotys" target="_blank">Neotys</a>
+</li>
+  <li>
+
+
+
+
+<a href="https://github.com/paulsbruce" title="Paul Bruce" target="_blank">Paul Bruce</a>
+</li>
+  
+  </ul>
+
+  <p style="font-size:0.8em">
+  
+    
+    <span class="support-neotys">Officially supported by Neotys</span>
+    
+  
+  </p>
+
+  </div>
+
+
+
+  <div class="sidebar-section">
+  <h3>Product Docs</h3>
+  
+  
+    
+    
+    
+    <a href="https://www.neotys.com/documents/doc/neoload/latest/38635.htm" target="_blank">Visit Documentation</a>
+  
+  
+  </div>
+
+
+
+  <div class="sidebar-section">
+  <h3>Neotys Academy</h3>
+  
+  <a href="https://academy.neotys.com/courses/foradvancedusers/lessons/neoload-as-code/" target="_blank">Visit course</a>
+  
+  </div>
+
+
+
+  <div class="sidebar-section">
+  <h3>Code Repos</h3>
+  <ul>
+  
+  <li><a href="https://github.com/Neotys-Connect/neoload-as-code" target="_blank">Neotys-Connect/neoload-as-code</a></li>
+  
+  <li><a href="https://github.com/Neotys-Labs/neoload-models/blob/v3/neoload-project/doc/v3/project.md" target="_blank">Neotys-Labs/neoload-models</a></li>
+  
+  <li><a href="https://github.com/Neotys-Labs/neoload-cli" target="_blank">Neotys-Labs/neoload-cli</a></li>
+  
+  </ul>
+  </div>
+
+
+
+  <div class="sidebar-section">
+  <h3>Videos</h3>
+  
+    
+      <iframe width="140" height="77" src="https://www.youtube.com/embed/VJ0ouJSSDr4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    
+  
+  </div>
+
+
+
+  <div class="sidebar-section">
+  <h3>Slides</h3>
+  
+    
+      
+        <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E/embed?start=true&loop=true&delayms=3000" frameborder="0" width="140" height="77" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+        <br />
+        <a href="https://docs.google.com/presentation/d/e/2PACX-1vTpbTLEN0CJzT-FOrRvb-Ygk3OnwvvK3OWux55mpTWjKygDhGnpR4T25fQljiorHMv5dh5qyLeQf03E/pub?start=false&loop=false&delayms=3000" target="_blank">(open in new tab)</a>
+      
+    
+  
+  </div>
+
+
+
+<div class="sidebar-section sidebar-comments" style="display:none">
+  <a href="#comments" onclick="scrollToCommentsDetail()">
+  <h3>Comments</h3>
+  <span id="comment-count" class="disqus-comment-count" data-disqus-identifier="/tutorials/neoload-as-code" data-disqus-url="https://connect.neotys.com/tutorials/neoload-as-code">Count</span>
+  </a>
+</div>
+
+
+
+  <div class="sidebar-section" id="toc-host">
+  <div id="toc">
+  <h3>ToC</h3>
+  <div class="toc toc-inner">
+  <ul>
+  <li><a href="#why-neoload-as-code">Why NeoLoad as-code</a></li>
+  <li><a href="#examples">Examples</a></li>
+  <li><a href="#training--workshops">Training / Workshops</a></li>
+  <li><a href="#getting-started">Getting Started</a></li>
+  <li><a href="#dsl-schema-support">DSL Schema Support</a>
+    <ul>
+      <li><a href="#vs-code-configuration">VS Code Configuration</a></li>
+      <li><a href="#intellij-configuration">IntelliJ Configuration</a></li>
+    </ul>
+  </li>
+  <li><a href="#additional-ci-and-cli-workshops">Additional CI and CLI workshops</a></li>
+</ul>
+
+  </div>
+  </div>
+  </div>
+  <script async type="text/javascript" src="/assets/scroll-toc.js"></script>
+
+
+
+
+
+  </div>
+
+
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
+<script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+  <script>
+    window.addEventListener("hashchange", function(e) {
+      if(location.hash === "#feedback")
+        $("#formbutton-button").click()
+    }, false);
+
+    function feedbackSubmit(data,setStatus) {
+      gtag('event', 'submit', {'event_category' : 'feedback', 'event_label' : document.title});
+      return data;
+    }
+    function feedbackOnResponse(ok, setStatus) {
+      if(ok) {
+        setTimeout(function() {
+          $("#formbutton-iframe").hide()
+        },4000)
+      }
+    }
+    window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+    formbutton("create", {
+        action: "https://formspree.io/f/xleovqka",
+        onSubmit: feedbackSubmit,
+        onResponse: feedbackOnResponse,
+        title: "This page:",
+        buttonImg: "<i class='fas fa-comment' style='font-size:24px'/>",
+        fields: [{
+          name: "helped",
+          type: "radio",
+          value: "yes",
+          label: "Helped me",
+          required: true,
+        },
+        {
+          name: "helped",
+          type: "radio",
+          value: "no",
+          label: "Did not help",
+          required: true
+        },
+        {
+          name: "comment",
+          label: "Anything you'd like to share?",
+          type: "textarea",
+          placeholder: "Tell us in your own words"
+        },
+        {
+          name: "source",
+          label: "Page/Topic",
+          type: "text",
+          readonly: true,
+          style: {
+            label: {
+              width: "1%"
+            }
+          },
+          value: ("" + document.location),
+        },
+        {
+          type: "submit"
+        }],
+        // ...
+      });
+
+  </script>
+
+  
+  <div style="clear:both;"></div>
+
+  <div id="comments" class="comments-outer" style="max-width:600px;">
+    <a href="#comments" name="comments"></a>
+    <div class="comments-none"><a href="#comments-bottom" onclick="setCommentDetailVisibility(true,this)">Add a comment</a></div>
+    <div id="disqus_thread" class="comments-detail" style="display:none;"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+        var disqus_config = function () {
+          this.page.url = getCommentsUrl();
+          this.page.identifier = "/tutorials/neoload-as-code";
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://neotys-connect.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+
+  <script>
+  function getCommentsUrl() {
+    return "https://connect.neotys.com/tutorials/neoload-as-code"
+  }
+  window.addEventListener("hashchange", function(e) {
+    if(location.hash === "#comment")
+      setCommentDetailVisibility(true)
+  }, false);
+  var manualCommentsOrigin = null;
+  function setCommentDetailVisibility(show,origin) {
+    if(origin != undefined && manualCommentsOrigin == null) {
+      manualCommentsOrigin = origin;
+      gtag('event', 'click add', {'event_category' : 'discussion', 'event_label' : document.title});
+    }
+    var detail = $(".comments-detail")
+    if(show) {
+      $(".comments-none").hide();
+      detail.show()
+      $(".comments-outer").addClass("comments-outer-detailed")
+      scrollToCommentsDetail()
+    }
+    else {
+      $(".comments-none").show();
+      detail.hide()
+      $(".comments-outer").removeClass("comments-outer-detailed")
+    }
+  }
+  function scrollToCommentsDetail() {
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $(".comments-detail").offset().top
+    }, 300);
+  }
+  var intComments = setInterval(function() {
+    if(typeof $ != 'undefined' && typeof DISQUSWIDGETS != 'undefined') {
+      var count = document.getElementById("comment-count");
+      count = $(count)
+      DISQUSWIDGETS.getCount({reset: true});
+      var text = count.text()
+      var num = text.split(" ")[0];
+      num = !(num.trim().length > 0 && !isNaN(parseInt(num))) ? 0 : parseInt(num);
+      if(num > 0) {
+        setCommentDetailVisibility(true)
+        $(".sidebar-comments").show()
+      }
+      clearInterval(intComments)
+    }
+  },100)
+  </script>
+  <script id="dsq-count-scr" src="//neotys-connect.disqus.com/count.js" async></script>
+
+  
+
+</article>
+
+      </div>
+      <div class="back-to-top-wrapper">
+        <a href="#top" class="back-to-top-link" aria-label="Scroll to Top">🔝</a>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p>
+          <a href="https://github.com/Neotys-Connect/connect.neotys.com/commits/main/_pages/tutorials/neoload-as-code/index.md" class="page-history">Page History in Git</a>
+        </p>
+      </div>
+      <div class="footer-col">
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+<!-- env: production -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(function () {   //  <- jquery is not yet initialized
+        updateOffsiteLinksToOpenInBlank()
+        updateArticleFrameSizes()
+      });
+      function updateOffsiteLinksToOpenInBlank() {
+        var host = document.location.hostname
+        var els = $("a:not(:target)").each(function(i,o) {
+          var href = (o.href+"").trim()
+          if(href.length > 0
+              && (
+                  ((href.indexOf('://'+host)<1) && $(o).attr('use-same-tab') != "true")
+                  || $(o).attr('use-same-tab') == "false"
+              )
+            ) {
+            if($(o).attr('is-external-link') != "true") {
+              $(o).attr('is-external-link','true')
+              $(o).attr('target','_blank')
+              if($(o).attr('show-external-link') != "false") {
+                var span = $('<span class="external-link-icon"></span>')
+                span.click(function() { $(o).click() })
+                span.insertAfter(o)
+              }
+            }
+          }
+        });
+        //alert(els.length);
+      }
+      function updateArticleFrameSizes() {
+        var els = $("iframe").each(function(i,o) {
+          var el = $(o)
+          var aspectratio = parseFloat(el.attr("aspectratio"));
+          if(isNaN(aspectratio)) {
+            aspectratio = el.height() / el.width();
+            el.attr("aspectratio",aspectratio)
+
+            var wrapper = $('<div class="iframe-wrapper">')
+            wrapper.css({
+              'max-width':''+el.parent().width()+"px",
+              'max-height':''+(el.parent().width()*aspectratio)+"px",
+              'width':'100vw',
+              'height':(100*aspectratio)+'vw',
+              'margin':'0 auto 1em auto'
+            })
+            el.wrap(wrapper).removeAttr("width").removeAttr("height").css({
+              'width':'100%',
+              'height':'100%'
+            })
+          }
+        });
+      }
+    </script>
+
+  </body>
+
+</html>

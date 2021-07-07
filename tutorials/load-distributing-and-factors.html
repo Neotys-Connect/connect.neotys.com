@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed for connect.neotys.com" href="/feed.xml" /><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Load Distributing and Factors in NeoLoad | Neotys Connect</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Load Distributing and Factors in NeoLoad" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Community-driven tutorials, learning resources, and collaborations." />
+<meta property="og:description" content="Community-driven tutorials, learning resources, and collaborations." />
+<link rel="canonical" href="https://connect.neotys.com/tutorials/load-distributing-and-factors" />
+<meta property="og:url" content="https://connect.neotys.com/tutorials/load-distributing-and-factors" />
+<meta property="og:site_name" content="Neotys Connect" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Load Distributing and Factors in NeoLoad" />
+<script type="application/ld+json">
+{"description":"Community-driven tutorials, learning resources, and collaborations.","url":"https://connect.neotys.com/tutorials/load-distributing-and-factors","@type":"WebPage","headline":"Load Distributing and Factors in NeoLoad","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://connect.neotys.com/feed.xml" title="Neotys Connect" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-WZ89N6ZSFK"></script>
+<script>
+  window['ga-disable-G-WZ89N6ZSFK'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WZ89N6ZSFK');
+</script>
+
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><div style="display:flex;align-items:flex-end;float:left;">
+      <a class="site-title" style="padding-right:0.8em;white-space: nowrap;" rel="author" href="/">Neotys Connect</a>
+      <span class="site-description">Community-driven tutorials, learning resources, and collaborations.</span>
+    </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Connect</a><a class="page-link" href="/other-neotys-sites">Other Neotys Sites</a></div>
+      </nav></div>
+</header>
+<div>
+        <div class="wrapper"><div id="breadcrumbs">
+
+<a href="/">Home</a>
+
+  
+    / <a href="/tutorials/">Tutorials</a>
+  
+
+  
+    / <span>Load Distributing and Factors in NeoLoad</span>
+  
+
+</div>
+</div>
+      </div><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+
+<article class="post">
+  <header class="post-header">
+    <h1 class="post-title">Load Distributing and Factors in NeoLoad</h1>
+  </header>
+<div class="article-container">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="article-content-with-sidebar">
+
+
+
+<p>Load Balancing is an integral part of performance testing. Running tests with virtual users is the way we can predict run time behavior of applications. The ability to not only access an application with virtual users but also to designate the access points from where they make requests, is crucial to performance testing precision. Here is how Neoload enables Load Balancing.</p>
+
+<p>Neoload provides “Load Factors” as part of the configuration criteria for Load Generators. By default, the total virtual load is divided evenly across each load generator. A Load Factor is an integer value used by Neoload to calculate load distribution. A load generator configured with the highest load factor will run the most available virtual users. Virtual users are proportioned across load generators in relation to each one’s load factor value.</p>
+
+<p>The formula Neoload uses is simple; “LoadFactor / (SumOfLoadFactors)”.  Example; 4 load generators used for a performance test with 1000 VUs, by default would have a distribution of 250 VUs each. Applying load factors of 1,2,3 and 4 to each LG would provide a distribution of 10%,20%,30% and 40% respectively. The virtual user count for each LG would then be 100,200,300 and 400 as opposed to 250 each.</p>
+
+<p>The example above is for a constant load of 1000 VUs for the entire duration of the test. Neoload provides a “Load Variation Policy” which defines if/how/when VUs are increased/decreased during test execution. The LVPs in Neoload are 1-“Constant”         2- “Ramp-Up”, 3-“Peak” and 4-”Customized”. Virtual user distribution across load generators are calculated with load factors but the distribution could change during test execution depending on the load variation policy. Each LVP sets the following behavior;</p>
+
+<p><strong>Constant:</strong> Static number of VUs throughout the test duration.</p>
+
+<p><strong>Ramp-Up:</strong> Number of VUs is increased periodically during the run</p>
+
+<p><strong>Peak:</strong> Static number of VUs alternated with a second static value over the test duration</p>
+
+<p><strong>Custom:</strong> A precise user load variation curve plotted on a graph specifying VUs over time.</p>
+
+<p>So let’s take a look at an actual run to see how the number of VUs per load generator is calculated when we use the default “Custom” load variation policy.</p>
+
+<p>Here is the first runtime configuration:</p>
+
+<p>We have one population with only one user path</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image18.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Four Load Generators each with Load Factors of 1,2,3 and 4. A Duration Policy of 15 minutes and a Constant Load Variation policy with 200 virtual users.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image3.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>According to the formula, “LoadFactor / (SumOfLoadFactors)” we get the following: Localhost -  1/10 = 10% = 20 VUs</p>
+
+<p>West Des Moines - 2/10 = 20% = 40 VUs</p>
+
+<p>San Antonio - 3/10 = 30% = 60 VUs</p>
+
+<p>Ashburn - 4/10 = 40% = 80 VUs</p>
+
+<p>From the Neoload Web dashboard, we can see how Neoload disbursed the VUs across the four load generators adhering to the formula.  As expected, Neoload distributed according to the calculation.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image16.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image27.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image19.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image13.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Now let’s take a look at the same run with a change in LVP. This time we’ll use “Ramp-Up” and run for 18 minutes so we can reach exactly 200 VUs. (Note: the “Maximum is” is an estimate made by Neoload before the run. The actual time it takes to reach the max number of users greatly depends on the server itself. For this run we need 18 minutes).</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image36.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>The localhost Load Generator with a load factor of 1 was assigned 4 VUs to start and increased by 2 VUs every 2 minutes up to 20 VUs</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image34.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>The Des Moines LG with a load factor of 2 started with 8 VUs and Neoload added 4 VUs every two minutes up to 40 VUs.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image1.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>San Antonio with a load factor of 3 is assigned 12 VUs to start and then incremented by 6 every two minutes for a total of 60 VUs.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image12.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Finally, Ashburn with a load factor of 4 is assigned 16 VUs at the start incrementing by 8 every 2 minutes for a total of 80 VUs.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image21.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>For the Peak LVP we start with 25 VUs and increase to 200 VUs every 2 minutes.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image6.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>When the test begins, each load generator gets assigned VUs according to their load factors,  all totalling to 25.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image32.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image37.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image40.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image35.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>As the test progresses, the Peak of 200 VUs is divided across all 4 load generators as:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image5.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image26.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image15.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image24.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The test progresses for another 2 minutes and we see the drop to minimum load. The total VUs are 25 as configured but this time we see a slightly different distribution:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image33.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image39.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image20.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image10.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Let’s take a closer look at the calculation for the minimum load. The percentages allocated to each load generator are the same as in the example above but the total number of VUs for the low point is an odd number; 25. Here are the calculations for 25 users across the 4 LGs:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Localhost -  1/10 = 10% = 2.5 VUs
+    West Des Moines - 2/10 = 20% = 5 VUs
+    San Antonio - 3/10 = 30% = 7.5 VUs
+    Ashburn - 4/10 = 40% = 10 VUs
+</code></pre></div></div>
+
+<p>In this case, what Neoload will do is round up or down to get to a whole number value. At the start of the test, the distribution for the minimum VUs (25) for each LG was 3,5,7 and 10 respectively. After the first increase to 200 VUs, we decrease back to the 25 VU minimum. This time we see 2,4,6 and 13 for each LG respectively. Since we can’t have a fraction of a virtual user, Neoload rounded to get to a whole number. It will then increase or decrease the whole number values in order to create the distribution.</p>
+
+<p>The last option for a Load Variation Policy is “customized” which is used for precise numbers of virtual users plotted at points over time. Here is the custom LVP used for the next example.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image4.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Selecting one point on the plot line we see 105 VUs at 7m33s :</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image38.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Let’s take a look at the Neoload Web dashboard at 7m30s (the graphs are increments of 5 seconds in Neoload Web).</p>
+
+<p>The localhost Load Generator with a load factor of 1 went from 0 to 11VUs at 7m30s</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image22.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>The West Des Moines LG with a load factor of 2 went from 0 to 21 at 7m30s</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image11.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>San Antonio with a load factor of 3 went from 0 to 30 at 7m30s</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image25.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Ashburn with a load factor of 4 went from 0 to 40 at 7m30s</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image28.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>So far, we’ve shown a scenario configured with one population containing one user path. 4 executions of that scenario each ran under 4 different Load Variation Policies and we used 4 geographically dispersed load generators each assigned a different load factor.</p>
+
+<p>Neoload provides virtual user disbursement at yet another level of the performance test configuration as well. “Populations’’ which are groups of user paths (tests) can be configured to have percentages of VUs assigned to each virtual user “type” (user path).  Generally speaking, a user path is associated with a certain “type” of user.  For example, we have 3 user paths in this population that were recorded against the same JPetsore application.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image9.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>In the first user path - “JPetstore”, the user logs in and orders one item and logs out. In “JPetstoreBrowse”, the user does not log in, looks at multiple product categories and items but does not order anything. For the third user path in the population, “JPetstore_multi_items”, the user logs in and orders more than one item and logs out. The “percentage” column designates the percentage of total virtual users that will be allocated to execute each user path.</p>
+
+<p>So let’s take a look at two test runs from graphs in Neoload Web in terms of each user path in the population. This first run is with 200 VUs and a “Constant” LVP.</p>
+
+<p>The localhost LG was allocated a total of 20 VUs</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image8.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Here is the distribution of VUs for each user path in the population on the localhost LG.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>The “JPetstore” user path which is configured for 50% is allocated 10 VUs</td>
+      <td>The “JPetsoreBrowser” user path which is configured for 25% is allocated 5 VUs</td>
+    </tr>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image23.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image2.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>And for the “JPetstore_multi_items” user path also configured for 25%, we correctly see 5 VUs.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image7.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Here is a run of the same scenario using the same LGs only this time using the “ramp-up” load variation policy.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image14.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>The Ashburn LG with a load factor of 4 starts at 16 and ramps-up to 80 VUs.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image29.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Here is the distribution of VUs for each user path in the population running on the Ashburn LG.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>For the “JPetsore” user path which is configured at 50% (of 80) starts at 8 VUs and ramps up to 40.</td>
+      <td>“JPetstoreBrowse” which is configured for 25% (of 80) starts at 4 VUs and ramps-up to 20.</td>
+    </tr>
+    <tr>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image31.png" alt="alt_text" title="image_tooltip" /></td>
+      <td><img src="/_pages/tutorials/load-distributing-and-factors/images/image30.png" alt="alt_text" title="image_tooltip" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For “JPetstore_multi_user” which is also configured for 25%, the VU count starts at 4 and ramps-up to 20.</p>
+
+<p><img src="/_pages/tutorials/load-distributing-and-factors/images/image30.png" alt="alt_text" title="image_tooltip" /></p>
+
+<p>Follow ons…</p>
+
+<ol>
+  <li>Load balancing actually gets more complicated when the scenario uses more then on population.</li>
+  <li>Since Load Generator distribution is actually assigned **per population, **you can have populationA running on specific LG: LG1/LG2/LG3, and a different population that run on LG3, LG4, LG5.  here’s how that works…..</li>
+</ol>
+
+
+
+
+
+
+  </div>
+  <div class="article-sidebar">
+
+
+
+  <div class="sidebar-section">
+  <h3>Contributors</h3>
+  <ul>
+  <li>
+
+
+
+
+<a href="" title="Jeff Lupisella">Jeff Lupisella</a>
+</li>
+  
+  </ul>
+
+  <p style="font-size:0.8em">
+  
+    
+    <span class="support-neotys">Officially supported by Neotys</span>
+    
+  
+  </p>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="sidebar-section sidebar-comments" style="display:none">
+  <a href="#comments" onclick="scrollToCommentsDetail()">
+  <h3>Comments</h3>
+  <span id="comment-count" class="disqus-comment-count" data-disqus-identifier="/tutorials/load-distributing-and-factors" data-disqus-url="https://connect.neotys.com/tutorials/load-distributing-and-factors">Count</span>
+  </a>
+</div>
+
+
+
+
+
+
+
+  </div>
+
+
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
+<script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+  <script>
+    window.addEventListener("hashchange", function(e) {
+      if(location.hash === "#feedback")
+        $("#formbutton-button").click()
+    }, false);
+
+    function feedbackSubmit(data,setStatus) {
+      gtag('event', 'submit', {'event_category' : 'feedback', 'event_label' : document.title});
+      return data;
+    }
+    function feedbackOnResponse(ok, setStatus) {
+      if(ok) {
+        setTimeout(function() {
+          $("#formbutton-iframe").hide()
+        },4000)
+      }
+    }
+    window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+    formbutton("create", {
+        action: "https://formspree.io/f/xleovqka",
+        onSubmit: feedbackSubmit,
+        onResponse: feedbackOnResponse,
+        title: "This page:",
+        buttonImg: "<i class='fas fa-comment' style='font-size:24px'/>",
+        fields: [{
+          name: "helped",
+          type: "radio",
+          value: "yes",
+          label: "Helped me",
+          required: true,
+        },
+        {
+          name: "helped",
+          type: "radio",
+          value: "no",
+          label: "Did not help",
+          required: true
+        },
+        {
+          name: "comment",
+          label: "Anything you'd like to share?",
+          type: "textarea",
+          placeholder: "Tell us in your own words"
+        },
+        {
+          name: "source",
+          label: "Page/Topic",
+          type: "text",
+          readonly: true,
+          style: {
+            label: {
+              width: "1%"
+            }
+          },
+          value: ("" + document.location),
+        },
+        {
+          type: "submit"
+        }],
+        // ...
+      });
+
+  </script>
+
+  
+  <div style="clear:both;"></div>
+
+  <div id="comments" class="comments-outer" style="max-width:600px;">
+    <a href="#comments" name="comments"></a>
+    <div class="comments-none"><a href="#comments-bottom" onclick="setCommentDetailVisibility(true,this)">Add a comment</a></div>
+    <div id="disqus_thread" class="comments-detail" style="display:none;"></div>
+    <script>
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+        var disqus_config = function () {
+          this.page.url = getCommentsUrl();
+          this.page.identifier = "/tutorials/load-distributing-and-factors";
+        };
+
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://neotys-connect.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+
+  <script>
+  function getCommentsUrl() {
+    return "https://connect.neotys.com/tutorials/load-distributing-and-factors"
+  }
+  window.addEventListener("hashchange", function(e) {
+    if(location.hash === "#comment")
+      setCommentDetailVisibility(true)
+  }, false);
+  var manualCommentsOrigin = null;
+  function setCommentDetailVisibility(show,origin) {
+    if(origin != undefined && manualCommentsOrigin == null) {
+      manualCommentsOrigin = origin;
+      gtag('event', 'click add', {'event_category' : 'discussion', 'event_label' : document.title});
+    }
+    var detail = $(".comments-detail")
+    if(show) {
+      $(".comments-none").hide();
+      detail.show()
+      $(".comments-outer").addClass("comments-outer-detailed")
+      scrollToCommentsDetail()
+    }
+    else {
+      $(".comments-none").show();
+      detail.hide()
+      $(".comments-outer").removeClass("comments-outer-detailed")
+    }
+  }
+  function scrollToCommentsDetail() {
+    $([document.documentElement, document.body]).animate({
+        scrollTop: $(".comments-detail").offset().top
+    }, 300);
+  }
+  var intComments = setInterval(function() {
+    if(typeof $ != 'undefined' && typeof DISQUSWIDGETS != 'undefined') {
+      var count = document.getElementById("comment-count");
+      count = $(count)
+      DISQUSWIDGETS.getCount({reset: true});
+      var text = count.text()
+      var num = text.split(" ")[0];
+      num = !(num.trim().length > 0 && !isNaN(parseInt(num))) ? 0 : parseInt(num);
+      if(num > 0) {
+        setCommentDetailVisibility(true)
+        $(".sidebar-comments").show()
+      }
+      clearInterval(intComments)
+    }
+  },100)
+  </script>
+  <script id="dsq-count-scr" src="//neotys-connect.disqus.com/count.js" async></script>
+
+  
+
+</article>
+
+      </div>
+      <div class="back-to-top-wrapper">
+        <a href="#top" class="back-to-top-link" aria-label="Scroll to Top">🔝</a>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p>
+          <a href="https://github.com/Neotys-Connect/connect.neotys.com/commits/main/_pages/tutorials/load-distributing-and-factors/index.md" class="page-history">Page History in Git</a>
+        </p>
+      </div>
+      <div class="footer-col">
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"></ul>
+</div>
+
+  </div>
+
+</footer>
+
+<!-- env: production -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(function () {   //  <- jquery is not yet initialized
+        updateOffsiteLinksToOpenInBlank()
+        updateArticleFrameSizes()
+      });
+      function updateOffsiteLinksToOpenInBlank() {
+        var host = document.location.hostname
+        var els = $("a:not(:target)").each(function(i,o) {
+          var href = (o.href+"").trim()
+          if(href.length > 0
+              && (
+                  ((href.indexOf('://'+host)<1) && $(o).attr('use-same-tab') != "true")
+                  || $(o).attr('use-same-tab') == "false"
+              )
+            ) {
+            if($(o).attr('is-external-link') != "true") {
+              $(o).attr('is-external-link','true')
+              $(o).attr('target','_blank')
+              if($(o).attr('show-external-link') != "false") {
+                var span = $('<span class="external-link-icon"></span>')
+                span.click(function() { $(o).click() })
+                span.insertAfter(o)
+              }
+            }
+          }
+        });
+        //alert(els.length);
+      }
+      function updateArticleFrameSizes() {
+        var els = $("iframe").each(function(i,o) {
+          var el = $(o)
+          var aspectratio = parseFloat(el.attr("aspectratio"));
+          if(isNaN(aspectratio)) {
+            aspectratio = el.height() / el.width();
+            el.attr("aspectratio",aspectratio)
+
+            var wrapper = $('<div class="iframe-wrapper">')
+            wrapper.css({
+              'max-width':''+el.parent().width()+"px",
+              'max-height':''+(el.parent().width()*aspectratio)+"px",
+              'width':'100vw',
+              'height':(100*aspectratio)+'vw',
+              'margin':'0 auto 1em auto'
+            })
+            el.wrap(wrapper).removeAttr("width").removeAttr("height").css({
+              'width':'100%',
+              'height':'100%'
+            })
+          }
+        });
+      }
+    </script>
+
+  </body>
+
+</html>
